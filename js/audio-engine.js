@@ -159,8 +159,6 @@ function initMasterChain() {
 // initialize all controls, audio engine and api
 window.onload = async function () {
     try {
-        await checkLoginStatus();
-
         // audio setup
         initInstruments();
         Tone.Transport.bpm.value = currentData.bpm;
@@ -172,14 +170,8 @@ window.onload = async function () {
         initTrackParams();
         initMasterParams();
 
-        // api setup for logged in users
-        if (loggedIn) {
-            loadSequences();
-            loadSamples();
-        } else {
-            // load init samples into sample dropdown for guests
-            loadInitSamples();
-        }
+        // load init samples into sample dropdown for guests
+        loadInitSamples();
 
         // once loaded, update ui and start audio functionality
         Tone.loaded().then(() => {

@@ -90,7 +90,7 @@ h3 {
     margin-top: 0px;
 }
 
-#sqnc {
+#m10{
     display: flex;
     height: 760px;
     align-items: center;
@@ -108,7 +108,7 @@ h3 {
     border-radius: 4px;
 }
 
-#sqncBody {
+#m10Body {
     width: 1200px;
     height: 700px;
     padding: 10px;

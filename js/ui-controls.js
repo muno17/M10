@@ -205,7 +205,7 @@ function initSave() {
 
         // don't do anything if there isn't anything to save;
         if (changes) {
-            await saveSequence();
+            // await saveSequence(); // *** figure this out
 
             resetChanges();
         }
@@ -347,17 +347,6 @@ function initSampleSelector() {
     });
 }
 
-function initUserUpload() {
-    const upload = document.getElementById("file");
-
-    if (upload) {
-        upload.addEventListener("change", function (e) {
-            console.log("calling user upload");
-            const file = e.target.files[0];
-            uploadSample(file);
-        });
-    }
-}
 
 function initGuestUpload() {
     const upload = document.getElementById("localFile");
@@ -411,7 +400,7 @@ function initSequenceSelector() {
             openSaveModal(selectedId);
         } else {
             if (selectedId != "new") {
-                getSequence(selectedId);
+                // getSequence(selectedId); // *** figure this out
                 length = currentData.length;
             } else {
                 resetInterface();
@@ -440,8 +429,8 @@ function openSaveModal(id) {
     // close when clicking either button in the modal
     noBtn.addEventListener("click", closeModal);
     yesBtn.addEventListener("click", async function () {
-        await saveSequence();
-        await getSequence(id);
+        // await saveSequence(); // *** figure these out
+        // await getSequence(id);
         closeModal()
     });
 
@@ -520,7 +509,6 @@ function initGlobalControls() {
     initTrackSelectors();
     initSequenceSelector();
     initSampleSelector();
-    initUserUpload();
     initGuestUpload();
     initOpenModal();
 }
