@@ -121,6 +121,7 @@ function initReverbBus() {
     masterReverb = new Tone.Reverb({
         decay: 3,
         preDelay: 0.01,
+        wet: 1.0
     });
 
     // width

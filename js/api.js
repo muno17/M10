@@ -43,16 +43,5 @@ function loadInitSamples() {
         option.innerHTML = '📦 ' + sample.name;
         option.classList.add("initSample");
         samples.appendChild(option);
-
-        // automatically loads the samples in - probably keep off
-        /*
-        if (instruments[index]) {
-            instruments[index].load(sample.path);
-
-            // Sync the internal data so the UI knows what's loaded
-            currentData.tracks[index].samplePath = sample.path;
-            currentData.tracks[index].sampleName = sample.name;
-        }
-        */
     })
 }

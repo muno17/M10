@@ -19,8 +19,6 @@ function userNotLoggedIn() {
 
     const reload = document.getElementById("reload");
     reload.innerHTML = "Reset"
-
-    loggedIn = false;
 }
 
 ////////////////////////// Global Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
