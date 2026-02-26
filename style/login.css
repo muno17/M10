@@ -1,0 +1,109 @@
+body {
+    font-family: ubuntu, "sans-serif", "sans";
+    background-color: #8e90a4;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    font-size: 60px;
+}
+
+fieldset {
+    background-color: #f7fbec;
+    border: 2px outset gray;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin-bottom: 50px;
+}
+
+.button,
+button {
+    box-shadow: 1px 1px 3px black;
+    height: 35px;
+    width: 120px;
+    font-size: 18px;
+    background-color: #a3d4c3;
+    font-weight: bold;
+}
+
+#main {
+    flex-grow: 1;
+}
+
+#home {
+    background-color: #8e90a4;
+    align-items: center;
+}
+
+#heading-house {
+    color: white;
+    margin: 20px;
+    text-shadow: 1px 1px 8px black;
+    text-align: center;
+}
+
+#home-heading {
+    font-size: 150px;
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+#home-heading:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.login-fieldset {
+    padding: 30px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.form-group label {
+    width: 100px;
+    text-align: right;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    flex: 1;
+    padding: 5px;
+    width: 250px;
+    box-sizing: border-box;
+}
+
+#createAccount {
+    width: 200px;
+}
+
+#login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error {
+    color: #ee9abd;
+}

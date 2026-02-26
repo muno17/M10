@@ -1,0 +1,445 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>sqnc</title>
+        <meta charset="utf-8" />
+        <link href="style/sqnc.css" type="text/css" rel="stylesheet" />
+        <script src="https://unpkg.com/tone@14.7.77/build/Tone.js"></script>
+        <script src="js/state.js"></script>
+        <script src="js/audio-engine.js"></script>
+        <script src="js/audio-params.js"></script>
+        <script src="js/sequencer.js"></script>
+        <script src="js/api.js"></script>
+        <script src="js/ui-tracks.js"></script>
+        <script src="js/ui-master.js"></script>
+        <script src="js/ui-controls.js"></script>
+    </head>
+    <body>
+        <!-- Loading Modal -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="loading-box">
+                <div class="spinner"></div>
+                <h3>Loading...</h3>
+                <p>Prepping samples & engine</p>
+            </div>
+        </div>
+        <header>
+            <a href="sqnc.php" id="header-logo">sqnc</a>
+            <div id="options">
+                <?php
+                    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+                    ?>
+                    <a href="api/logout.php">Log Out</a>
+                    <?php
+                    }else {
+                    ?>
+                    <a href="login.php">Log In</a>
+                    <?php
+                    }
+                    ?>
+            </div>
+        </header>
+        <div id="sqnc">
+            <img class="wood" src="style/wood-pattern.png">
+            <div id="sqncBody">
+                <div id="top">
+                    <div id="tracks">
+                        <button class="trackBtn selected" data-index="0">T1</button>
+                        <button class="trackBtn" data-index="1">T2</button>
+                        <button class="trackBtn" data-index="2">T3</button>
+                        <button class="trackBtn" data-index="3">T4</button>
+                        <button class="trackBtn" data-index="4">T5</button>
+                        <button class="trackBtn" data-index="5">T6</button>
+                        <button class="trackBtn" data-index="6">T7</button>
+                        <button class="trackBtn" data-index="7">T8</button>
+                        <button class="trackBtn" data-index="8">T9</button>
+                        <button class="trackBtn" data-index="9">T10</button>
+                        <button id="master" class="trackBtn" data-index="99">Master</button>
+                    </div>
+                    <div id="params">
+                        <div id="topParams">
+                            <div id="logo">sqnc</div>
+                            <div id="trackParams">
+                                <div class="paramRow" id="stateRow">
+                                    <div class="selector">
+                                        <label for="sequences">Sequence</label>
+                                        <select name="sequences" id="sequences"></select>
+                                    </div>
+                                    <button id="save">Save</button>
+                                    <button id="new">New</button>
+                                    <button id="reload">Reload</button>
+                                </div>
+                                <div class="paramRow" id="selectorRow">
+                                    <div class="selector">
+                                        <label for="samples">Sample</label>
+                                        <select name="samples" id="samples"></select>
+                                    </div>
+                                    <div  id="userUpload">
+                                        <label for="file" id="upload-button">Upload</label>
+                                        <input type="file" name="file" id="file" value="Upload" enctype="multipart/form-data" accept=".wav,.mp3">
+                                    </div>
+                                    <div class="local-upload-container hidden" id="guestUpload">
+                                        <label for="localFile" id="upload-button">Upload</label>
+                                        <input type="file" id="localFile" accept=".wav,.mp3" style="display:none">
+                                    </div>
+                                </div>
+                                <!-- Track Params -->
+                                <div class="paramRow">
+                                    <div class="house">
+                                        <h2>Volume</h2>
+                                        <div id="volumeDisplay" class="display">-12dB</div>
+                                        <input type="range" min="-60" max="6" step="1" value="-12" class="slider" id="volume">
+                                    </div>
+                                    <div class="house">
+                                        <h2>Pan</h2>
+                                        <div id="panDisplay" class="display">0</div>
+                                        <input type="range" min="-1" max="1" step="0.02" value="0" class="slider" id="pan">
+                                    </div>
+                                    <div class="house">
+                                        <h2>Pitch</h2>
+                                        <div id="pitchDisplay" class="display">0.0</div>
+                                        <input type="range" min="-12" max="12" step="0.01" value="0" class="slider" id="pitch">
+                                    </div>
+                                    <div class="house">
+                                        <h2>Start</h2>
+                                        <div id="startDisplay" class="display">0</div>
+                                        <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="start">
+                                    </div>
+                                </div>
+                                <div class="paramRow">
+                                    <div class="house">
+                                        <h2>Attack</h2>
+                                        <div id="attackDisplay" class="display">0</div>
+                                        <input type="range" min="0" max="2" step="0.01" value="0" class="slider" id="attack">
+                                    </div>
+                                     <div class="house">
+                                        <h2>Decay</h2>
+                                        <div id="decayDisplay" class="display">100</div>
+                                        <input type="range" min="0.01" max="2" step="0.01" value="2" class="slider" id="decay">
+                                    </div>
+                                    <div class="house">
+                                        <h2>Sustain</h2>
+                                        <div id="sustainDisplay" class="display">100</div>
+                                        <input type="range" min="0" max="1" step="0.01" value="1" class="slider" id="sustain">
+                                    </div>
+                                    <div class="house">
+                                        <h2>Release</h2>
+                                        <div id="releaseDisplay" class="display">0</div>
+                                        <input type="range" min="0" max="5" step="0.01" value="0" class="slider" id="release">
+                                    </div>
+                                </div>
+                                <div class="paramRow">
+                                    <div class="house">
+                                        <h2>LP Width</h2>
+                                        <div id="lpWidthDisplay" class="display">5.0kHz</div>
+                                        <input type="range" min="0" max="5000" value="20000" class="slider" id="lpWidth">
+                                    </div>
+                                    <div class="house">
+                                        <h2>LP Q</h2>
+                                        <div id="lpqDisplay" class="display">0</div>
+                                        <input type="range" min="0" max="20" step="0.1" value="0" class="slider" id="lpq">
+                                    </div>
+                                    <div class="house">
+                                        <h2>HP Width</h2>
+                                        <div id="hpWidthDisplay" class="display">10Hz</div>
+                                        <input type="range" min="10" max="5000" value="10" class="slider" id="hpWidth">
+                                    </div>
+                                    <div class="house">
+                                        <h2>HP Q</h2>
+                                        <div id="hpqDisplay" class="display">0</div>
+                                        <input type="range" min="0" max="20" step="0.1" value="0" class="slider" id="hpq">
+                                    </div>
+                                </div>
+                                <!-- Master Track Params -->
+                                <div id="masterArea" class="master">
+                                    <div class="masterEffect">
+                                        <h3>Reverb</h3>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Dirt</h2>
+                                                <div id="dirtDisplay" class="display">20</div>
+                                                <input type="range" min="0" max="100" step="1" value="20" class="slider" id="dirt">
+                                            </div>
+                                            <div class="house">
+                                                <h2>Dirt Mix</h2>
+                                                <div id="dirtMixDisplay" class="display">20</div>
+                                                <input type="range" min="0" max="1" step=".01" value=".2" class="slider" id="dirtMix">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Space</h2>
+                                                <div id="spaceDisplay" class="display">20</div>
+                                                <input type="range" min="0.001" max="10" step="0.1"value="2.0" class="slider" id="space">
+                                            </div>
+                                            <div class="house">
+                                                <h2>Pre-Delay</h2>
+                                                <div id="predelayDisplay" class="display">1</div>
+                                                <input type="range" min="0" max="1" step=".01" value="0.01" class="slider" id="predelay">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Width</h2>
+                                                <div id="revWidthDisplay" class="display">30</div>
+                                                <input type="range" min="0" max="1" step="0.01"value=".3" class="slider" id="revWidth">
+                                            </div>
+                                            <div class="house limiter">
+                                                <h2>Limit</h2>
+                                                <div id="revLimitDisplay" class="display">-3</div>
+                                                <input type="range" min="-24" max="0" step="1" value="-3" class="slider" id="revLimit">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="divider masterDivider"></div>
+                                    <div class="masterEffect">
+                                        <h3>EQ</h3>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Low</h2>
+                                                <div id="eqLowDisplay" class="display">0db</div>
+                                                <input type="range" min="-24" max="6" step="0" value="0" class="slider" id="eqLow">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Mid</h2>
+                                                <div id="eqMidDisplay" class="display">0db</div>
+                                                <input type="range" min="-24" max="6" step="0" value="0" class="slider" id="eqMid">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>High</h2>
+                                                <div id="eqHighDisplay" class="display">0db</div>
+                                                <input type="range" min="-24" max="6" step="0" value="0" class="slider" id="eqHigh">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="divider masterDivider"></div>
+                                    <div class="masterEffect">
+                                        <h3>Compressor</h3>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Threshold</h2>
+                                                <div id="compThreshDisplay" class="display">-24</div>
+                                                <input type="range" min="-60" max="0" step="1"value="-24" class="slider" id="compThresh">
+                                            </div>
+                                            <div class="house">
+                                                <h2>Ratio</h2>
+                                                <div id="compRatioDisplay" class="display">1</div>
+                                                <input type="range" min="1" max="20" step="1" value="1" class="slider" id="compRatio">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Attack</h2>
+                                                <div id="compAttackDisplay" class="display">5</div>
+                                                <input type="range" min="0" max="1" step=".01"value=".05" class="slider" id="compAttack">
+                                            </div>
+                                            <div class="house">
+                                                <h2>Release</h2>
+                                                <div id="compReleaseDisplay" class="display">25</div>
+                                                <input type="range" min="0" max="1" step=".01"value=".25" class="slider" id="compRelease">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Knee</h2>
+                                                <div id="compKneeDisplay" class="display">30</div>
+                                                <input type="range" min="0" max="40" step="1"value="30" class="slider" id="compKnee">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="divider masterDivider"></div>
+                                    <div class="masterEffect">
+                                        <h3>Saturator</h3>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Drive</h2>
+                                                <div id="satDriveDisplay" class="display">0</div>
+                                                <input type="range" min="0" max=".5" step=".01" value="0" class="slider" id="satDrive">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Tone</h2>
+                                                <div id="satToneDisplay" class="display">100</div>
+                                                <input type="range" min="0" max="20000" step="10" value="20000" class="slider" id="satTone">
+                                            </div>
+                                        </div>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Mix</h2>
+                                                <div id="satMixDisplay" class="display">0</div>
+                                                <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="satMix">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="divider masterDivider"></div>
+                                    <div class="masterEffect">
+                                        <h3>Limiter</h3>
+                                        <div class="masterEffectRow">
+                                            <div class="house">
+                                                <h2>Threshold</h2>
+                                                <div id="limitThreshDisplay" class="display">-3</div>
+                                                <input type="range" min="-40" max="0" step="1" value="-3" class="slider" id="limitThresh">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div id="paramDivider" class="divider paramDivider"></div>
+                            <div id="effectParams">
+                                <div id="effectsHouse">
+                                    <div class="paramRow">
+                                        <div class="house">
+                                            <h2>Distortion</h2>
+                                            <div id="distortionDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="distortion">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Bitcrusher</h2>
+                                            <div id="bcDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="bc">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Reverb Send</h2>
+                                            <div id="revSendDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="revSend">
+                                        </div>
+                                    </div>
+                                    <div class="paramRow">
+                                        <div class="house">
+                                            <h2>Chorus Rate</h2>
+                                            <div id="chorusRateDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="5" step="0.01" value="0" class="slider" id="chorusRate">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Chorus Depth</h2>
+                                            <div id="chorusDepthDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="chorusDepth">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Chorus Mix</h2>
+                                            <div id="chorusMixDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="chorusMix">
+                                        </div>
+                                    </div>
+                                    <div class="paramRow">
+                                        <div class="house">
+                                            <h2>Tremolo Rate</h2>
+                                            <div id="tremRateDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="20" step="0.1" value="0" class="slider" id="tremRate">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Tremolo Depth</h2>
+                                            <div id="tremDepthDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="tremDepth">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Tremolo Mix</h2>
+                                            <div id="tremMixDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="tremMix">
+                                        </div>
+                                    </div>
+                                    <div class="paramRow">
+                                        <div class="house">
+                                            <h2>Delay Time</h2>
+                                            <div id="delTimeDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="delTime">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Delay Feedback</h2>
+                                            <div id="delFbackDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="0.9" step="0.01" value="0" class="slider" id="delFback">
+                                        </div>
+                                        <div class="house">
+                                            <h2>Delay Mix</h2>
+                                            <div id="delMixDisplay" class="display">0</div>
+                                            <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="delMix">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="globalParams">
+                            <div class="house">
+                                <h2>Master Vol</h2>
+                                <div class="display" id="masterVolDisplay">-6dB</div>
+                                <input type="range" min="-60" max="0" value="-6" class="slider" id="masterVol">
+                            </div>
+                            <div class="house">
+                                <h2>Tempo</h2>
+                                <div class="display" id="tempoDisplay">120</div>
+                                <input type="range" min="1" max="300" value="120" class="slider" id="tempo">
+                            </div>
+                            <div class="house">
+                                <h2>Swing</h2>
+                                <div class="display" id="swingDisplay">0</div>
+                                <input type="range" min="0" max="1" step=".01" value="0" class="slider" id="swing">
+                            </div>
+                            <button id="transport" class="global">Play</button>
+                            <button id="record" class="global">Record</button>
+                            <button id="clear" class="global">Clear</button>
+                            <div id="pages">
+                                <button id="page1" class="page selected loop" data-index="0">1:4</button>
+                                <button id="page2" class="page" data-index="1">2:4</button>
+                                <button id="page3" class="page" data-index="2">3:4</button>
+                                <button id="page4" class="page" data-index="3">4:4</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sequencer">
+                    <button class="step" data-step="0">1</button>
+                    <button class="step" data-step="1">2</button>
+                    <button class="step" data-step="2">3</button>
+                    <button class="step" data-step="3">4</button>
+                    <div class="divider"></div>
+                    <button class="step" data-step="4">5</button>
+                    <button class="step" data-step="5">6</button>
+                    <button class="step" data-step="6">7</button>
+                    <button class="step" data-step="7">8</button>
+                    <div class="divider"></div>
+                    <button class="step" data-step="8">9</button>
+                    <button class="step" data-step="9">10</button>
+                    <button class="step" data-step="10">11</button>
+                    <button class="step" data-step="11">12</button>
+                    <div class="divider"></div>
+                    <button class="step" data-step="12">13</button>
+                    <button class="step" data-step="13">14</button>
+                    <button class="step" data-step="14">15</button>
+                    <button class="step" data-step="15">16</button>
+                </div>
+            </div>
+            <img class="wood" src="style/wood-pattern.png">
+        </div>
+        <footer>Danny Muñoz - CPSC 5210</footer>
+        <!-- Modal Screens -->
+        <!-- New Sequence Modal -->
+        <div id="sequence-overlay" class="modal-overlay modal-hidden">
+            <div class="modal-box">
+                <h3>New Sequence</h3>
+                <input type="text" id="seq-name" placeholder="Name your sequence">
+                <div class="modal-footer">
+                    <button id="sequence-close-btn">Cancel</button>
+                    <button id="sequence-init-btn">Create</button>
+                </div>
+            </div>
+        </div>
+        <!-- Save Modal -->
+        <div id="save-overlay" class="modal-overlay modal-hidden">
+            <div class="modal-box">
+                <h3>Save Current Changes?</h3>
+                <div class="modal-footer">
+                    <button id="sequence-save-btn">Yes</button>
+                    <button id="sequence-nosave-btn">No</button>
+                </div>
+            </div>
+        </div>
+	</body>
+</html>
