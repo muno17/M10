@@ -86,9 +86,14 @@ function initSpace() {
         currentData.master.space = val;
 
         updateSpaceUI(val);
-        setMasterSpace(val);
+        //setMasterSpace(val);
 
         markAsChanged();
+    });
+
+    space.addEventListener("change", function () {
+        // only trigger when the user stops sliding
+        setMasterSpace(currentData.master.space);
     });
 }
 

@@ -393,8 +393,8 @@ var initData = {
         },
     ],
     master: {
-        dirt: 20,
-        dirtMix: 0.2,
+        dirt: 5,
+        dirtMix: 0.1,
         space: 2.0,
         predelay: 0.01,
         revWidth: 0.3,

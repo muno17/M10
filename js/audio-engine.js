@@ -84,7 +84,7 @@ function initInstruments() {
 
         // send to master reverb bus
         reverbSends[i] = new Tone.Gain(track.reverb);
-        panVols[i].connect(reverbSends[i]);
+        delays[i].connect(reverbSends[i]);
         reverbSends[i].connect(reverbHeat);
 
         // chain the audio path
@@ -113,10 +113,10 @@ function loadInstruments() {
 }
 
 // chain together effects to create a master reverb bus
-function initReverbBus() {
+async function initReverbBus() {
     // dirt
-    reverbHeat = new Tone.Chebyshev(20);
-    reverbHeat.wet.value = 0.2;
+    reverbHeat = new Tone.Chebyshev(10);
+    reverbHeat.wet.value = 0.05;
 
     masterReverb = new Tone.Reverb({
         decay: 3,
@@ -131,7 +131,7 @@ function initReverbBus() {
     // chain effects from reverb bus together and send to masterEQ
     reverbHeat.chain(masterReverb, reverbWidener, reverbLimiter, masterEQ);
 
-    masterReverb.generate();
+    await masterReverb.generate();
 }
 
 function initMasterChain() {
@@ -140,7 +140,7 @@ function initMasterChain() {
     // init master effects
     masterEQ = new Tone.EQ3(0, 0, 0);
     masterCompressor = new Tone.Compressor(-24, 3);
-    masterSaturator = new Tone.Distortion(0.1);
+    masterSaturator = new Tone.Distortion(0);
     saturatorFilter = new Tone.Filter(20000, "lowpass");
     masterLimiter = new Tone.Limiter(-1);
 

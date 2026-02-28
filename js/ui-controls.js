@@ -245,6 +245,9 @@ function initReload() {
             // redraw the UI
             renderSequencer();
             renderParams();
+
+            // update params
+            resetParams();
         }
     });
 }
@@ -582,70 +585,29 @@ function renderMasterParams() {
     });
     // master UI
     updateMasterVolUI(currentData.masterVolume);
-    setMasterVol(currentData.masterVolume);
-
     updateTempoUI(currentData.bpm);
-    setTempo(currentData.bpm);
-
     updateSwingUI(currentData.swing);
-    setSwing(currentData.swing);
-
     updatePageVisuals(parseInt(currentData.length))
 
     // master effects
     updateDirtUI(master.dirt);
-    setMasterDirt(master.dirt);
-
     updateDirtMixUI(master.dirtMix);
-    setMasterDirtMix(master.dirtMix);
-
     updateSpaceUI(master.space);
-    setMasterSpace(master.space);
-
     updatePredelayUI(master.predelay);
-    setMasterPredelay(master.predelay);
-
     updateReverbWidthUI(master.revWidth);
-    setMasterReverbWidth(master.revWidth);
-
     updateReverbLimitUI(master.revLimit);
-    setMasterReverbLimit(master.revLimit);
-
     updateEqLowUI(master.eqLow);
-    setMasterEqLow(master.eqLow);
-
     updateEqMidUI(master.eqMid);
-    setMasterEqMid(master.eqMid);
-
     updateEqHighUI(master.eqHigh);
-    setMasterEqHigh(master.eqHigh);
-
     updateSatDriveUI(master.satDrive);
-    setMasterSatDrive(master.satDrive);
-
     updateSatToneUI(master.satTone);
-    setMasterSatTone(master.satTone);
-
     updateSatMixUI(master.satMix);
-    setMasterSatMix(master.satMix);
-
     updateCompThreshUI(master.compThresh);
-    setMasterCompThresh(master.compThresh);
-
     updateCompRatioUI(master.compRatio);
-    setMasterCompRatio(master.compRatio);
-
     updateCompAttackUI(master.compAttack);
-    setMasterCompAttack(master.compAttack);
-
     updateCompReleaseUI(master.compRelease);
-    setMasterCompRelease(master.compRelease);
-
     updateCompKneeUI(master.compKnee);
-    setMasterCompKnee(master.compKnee);
-
     updateLimitThreshUI(master.limitThresh);
-    setMasterLimitThresh(master.limitThresh);
 }
 
 // update all params to track's saved value
@@ -663,77 +625,31 @@ function renderTrackParams() {
 
     // params
     updateVolumeUI(track.volume);
-    setTrackVolume(track.volume, true);
-
     updatePanUI(track.pan);
-    setTrackPan(track.pan, true);
-
     updatePitchUI(track.pitch);
-    setTrackPitch(track.pitch);
-
     updateStartUI(track.start);
-    setTrackStart(track.start);
-
     updateAttackUI(track.attack);
-    setTrackAttack(track.attack);
-
     updateDecayUI(track.decay);
-    setTrackDecay(track.decay);
-
     updateSustainUI(track.sustain);
-    setTrackSustain(track.sustain);
-
     updateReleaseUI(track.release);
-    setTrackRelease(track.release);
-
     updateLpWidthUI(track.lpWidth);
-    setTrackLpWidth(track.lpWidth);
-
     updateLpQUI(track.lpq);
-    setTrackLpQ(track.lpq);
-
     updateHpWidthUI(track.hpWidth);
-    setTrackHpWidth(track.hpWidth);
-
     updateHpQUI(track.hpq);
-    setTrackHpQ(track.hpq);
 
     // effects
     updateDistortionUI(track.distortion);
-    setTrackDistortion(track.distortion);
-
     updateBitcrusherUI(track.bitcrusher);
-    setTrackBitcrusher(track.bitcrusher);
-
     updateChorusRateUI(track.chorusRate);
-    setTrackChorusRate(track.chorusRate);
-
     updateChorusDepthUI(track.chorusDepth);
-    setTrackChorusDepth(track.chorusDepth);
-
     updateChorusMixUI(track.chorusMix);
-    setTrackChorusMix(track.chorusMix);
-
     updateTremoloRateUI(track.tremRate);
-    setTrackTremoloRate(track.tremRate);
-
     updateTremoloDepthUI(track.tremDepth);
-    setTrackTremoloDepth(track.tremDepth);
-
     updateTremoloMixUI(track.tremMix);
-    setTrackTremoloMix(track.tremMix);
-
     updateDelayTimeUI(track.delTime);
-    setTrackDelayTime(track.delTime);
-
     updateDelayFeedbackUI(track.delFback);
-    setTrackDelayFeedback(track.delFback);
-
     updateDelayMixUI(track.delMix);
-    setTrackDelayMix(track.delMix);
-
     updateReverbSendUI(track.reverb);
-    setTrackReverbSend(track.reverb);
 }
 
 function syncTrackParams() {
@@ -773,4 +689,70 @@ function syncTrackParams() {
 
             currentTrack = originalViewTrack;
         });
+}
+
+function setMasterParams() {
+    const master = currentData.master;
+
+    // master controls
+    setMasterVol(currentData.masterVolume);
+    setTempo(currentData.bpm);
+    setSwing(currentData.swing);
+
+    // master effects
+    setMasterDirt(master.dirt);
+    setMasterDirtMix(master.dirtMix);
+    setMasterSpace(master.space);
+    setMasterPredelay(master.predelay);
+    setMasterReverbWidth(master.revWidth);
+    setMasterReverbLimit(master.revLimit);
+    setMasterEqLow(master.eqLow);
+    setMasterEqMid(master.eqMid);
+    setMasterEqHigh(master.eqHigh);
+    setMasterSatDrive(master.satDrive);
+    setMasterSatTone(master.satTone);
+    setMasterSatMix(master.satMix);
+    setMasterCompThresh(master.compThresh);
+    setMasterCompRatio(master.compRatio);
+    setMasterCompAttack(master.compAttack);
+    setMasterCompRelease(master.compRelease);
+    setMasterCompKnee(master.compKnee);
+    setMasterLimitThresh(master.limitThresh);
+}
+
+function setTrackParams() {
+    const track = currentData.tracks[currentTrack];
+
+    // params
+    setTrackVolume(track.volume, true);
+    setTrackPan(track.pan, true);
+    setTrackPitch(track.pitch);
+    setTrackStart(track.start);
+    setTrackAttack(track.attack);
+    setTrackDecay(track.decay);
+    setTrackSustain(track.sustain);
+    setTrackRelease(track.release);
+    setTrackLpWidth(track.lpWidth);
+    setTrackLpQ(track.lpq);
+    setTrackHpWidth(track.hpWidth);
+    setTrackHpQ(track.hpq);
+
+    // effects
+    setTrackDistortion(track.distortion);
+    setTrackBitcrusher(track.bitcrusher);
+    setTrackChorusRate(track.chorusRate);
+    setTrackChorusDepth(track.chorusDepth);
+    setTrackChorusMix(track.chorusMix);
+    setTrackTremoloRate(track.tremRate);
+    setTrackTremoloDepth(track.tremDepth);
+    setTrackTremoloMix(track.tremMix);
+    setTrackDelayTime(track.delTime);
+    setTrackDelayFeedback(track.delFback);
+    setTrackDelayMix(track.delMix);
+    setTrackReverbSend(track.reverb);
+}
+
+function resetParams() {
+    setMasterParams();
+    syncTrackParams();
 }
