@@ -281,14 +281,34 @@ function playTrackSound(index, time) {
 
 // stop the audio buffer for each instrument immediately
 function stopAllSounds() {
+    const now = Tone.now();
+
     instruments.forEach((player, i) => {
+        // 1. Stop the sample source immediately
         if (player) {
-            player.stop();
+            player.stop(now);
         }
 
+        // 2. Kill the envelope
         if (ampEnvs[i]) {
-            ampEnvs[i].cancel();
-            ampEnvs[i].triggerRelease();
+            // This stops any scheduled attack/release ramps
+            ampEnvs[i].cancel(now); 
+            // This forces the envelope to its "off" state
+            ampEnvs[i].output.gain.setValueAtTime(0, now);
+            ampEnvs[i].triggerRelease(now);
+        }
+
+        // 3. Clear Delay tails - using .value for the Signal
+        if (delays[i]) {
+            delays[i].delayTime.cancelScheduledValues(now);
+
+            // Use the track data to remember where the wet should be
+            const currentWet = currentData.tracks[i].delMix;
+            
+            // Momentarily "Mute" the delay output
+            delays[i].wet.setValueAtTime(0, now);
+            // Schedule it to come back in 100ms
+            delays[i].wet.setValueAtTime(currentWet, now + 0.1);
         }
     });
 }
@@ -324,6 +344,7 @@ function stopTransport() {
     const transport = document.getElementById("transport");
     running = false;
     // functionality to stop
+    Tone.Transport.cancel(0);
     Tone.Transport.stop();
     stopAllSounds();
     Tone.Draw.cancel();
@@ -337,4 +358,7 @@ function stopTransport() {
         el.classList.remove("flash");
     });
     transport.innerHTML = "Play";
+
+    // reschedule so its ready to play again
+    setupAudioLoop();
 }
