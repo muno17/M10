@@ -402,6 +402,10 @@ button.page {
     background-color: color-mix(in srgb, #5F9F89 75%, #8E90A4);
 }
 
+#reload {
+    background-color : #EE9ABD;
+}
+
 .changes {
     box-shadow: 1px 1px 40px #e2ab45;
     text-shadow: 1px 1px 20px #e2ab45;

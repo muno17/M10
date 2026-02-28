@@ -144,7 +144,6 @@ function initMasterChain() {
     saturatorFilter = new Tone.Filter(20000, "lowpass");
     masterLimiter = new Tone.Limiter(-1);
 
-    //initReverbBus(); //***
 
     // chain master audio and send to main output
     masterEQ.chain(
@@ -186,6 +185,7 @@ window.onload = async function () {
         });
 
         renderMasterParams();
+        userNotLoggedIn();
         removeLoadingScreen();
     } catch (error) {
         console.error("Failed to load:", error);
@@ -216,9 +216,7 @@ function setupAudioLoop() {
         const totalSteps = parseInt(currentData.length) * 16;
         // play the sounds for the current step
         currentData.tracks.forEach((track, index) => {
-            //untoggleTrackHit(index); //***
             if (track.steps[currentStep] == 1) {
-                //toggleTrackHit(index); //***
                 playTrackSound(index, time);
             }
         });
@@ -316,7 +314,7 @@ function stopAllSounds() {
 async function startTransport() {
     const transport = document.getElementById("transport");
     
-    await Tone.start(); //***
+    await Tone.start();
     Tone.context.resume();
 
     // initiate reverb if it hasn't started

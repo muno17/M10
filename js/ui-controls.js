@@ -4,12 +4,18 @@
 function userNotLoggedIn() {
     const sequences = document.getElementById("sequences");
     sequences.innerHTML = "<option>Log in to save sequences</option>";
+    sequences.style.display = "none";
+
+    const seqLabel = document.getElementById("sequenceLabel");
+    seqLabel.style.display = "none";
 
     const save = document.getElementById("save");
     save.disabled = true;
+    save.style.display = "none";
 
     const newB = document.getElementById("new");
     newB.disabled = true;
+    newB.style.display = "none";
 
     const userUpload = document.getElementById("userUpload");
     userUpload.classList.toggle('hidden');
