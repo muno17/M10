@@ -8,7 +8,6 @@ function initMasterParams() {
     initSpace();
     initPredelay();
     initReverbWidth();
-    initReverbLimit();
 
     // eq
     initEqLow();
@@ -26,9 +25,6 @@ function initMasterParams() {
     initSatDrive();
     initSatTone();
     initSatMix();
-
-    // limiter
-    initLimitThresh();
 }
 
 // reverb
@@ -150,28 +146,6 @@ function updateReverbWidthUI(val) {
     // format the value so it displays 0-100
     revWidth.value = val;
     revWidthDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initReverbLimit() {
-    const revLimit = document.getElementById("revLimit");
-
-    revLimit.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.revLimit = val;
-
-        updateReverbLimitUI(val);
-        setMasterReverbLimit(val);
-
-        markAsChanged();
-    });
-}
-
-function updateReverbLimitUI(val) {
-    const revLimit = document.getElementById("revLimit");
-    const revLimitDisplay = document.getElementById("revLimitDisplay");
-
-    revLimit.value = val;
-    revLimitDisplay.innerHTML = parseInt(val);
 }
 
 // eq
@@ -420,27 +394,4 @@ function updateSatMixUI(val) {
     // format the value so it displays 0-100
     satMix.value = val;
     satMixDisplay.innerHTML = parseInt(val * 100);
-}
-
-//limiter
-function initLimitThresh() {
-    const limitThresh = document.getElementById("limitThresh");
-
-    limitThresh.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.limitThresh = val;
-
-        updateLimitThreshUI(val);
-        setMasterLimitThresh(val);
-
-        markAsChanged();
-    });
-}
-
-function updateLimitThreshUI(val) {
-    const limitThresh = document.getElementById("limitThresh");
-    const limitThreshDisplay = document.getElementById("limitThreshDisplay");
-
-    limitThresh.value = val;
-    limitThreshDisplay.innerHTML = parseInt(val);
 }

@@ -141,7 +141,7 @@ function setMasterDirtMix(val) {
 }
 
 async function setMasterSpace(val) {
-    masterReverb.decay = Math.min(0.001, val);
+    masterReverb.decay = val > 0 ? val : 0.001;
     await masterReverb.generate();
 }
 
@@ -152,10 +152,6 @@ function setMasterPredelay(val) {
 function setMasterReverbWidth(val) {
     // 0 = mono, 1 = very Wide
     reverbWidener.width.rampTo(val, 0.1);
-}
-
-function setMasterReverbLimit(val) {
-    reverbLimiter.threshold.value = val;
 }
 
 // eq
@@ -204,10 +200,4 @@ function setMasterSatTone(val) {
 
 function setMasterSatMix(val) {
     masterSaturator.wet.value = val;
-}
-
-// Limiter
-
-function setMasterLimitThresh(val) {
-    masterLimiter.threshold.rampTo(Math.min(0, val), 0.05);
 }
