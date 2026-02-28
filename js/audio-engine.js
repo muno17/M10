@@ -38,7 +38,6 @@ var reverbLimiter;
 
 // create tone.js samplers
 function initInstruments() {
-    initMasterChain();
     for (var i = 0; i < 10; i++) {
         const track = currentData.tracks[i];
 
@@ -144,7 +143,7 @@ function initMasterChain() {
     saturatorFilter = new Tone.Filter(20000, "lowpass");
     masterLimiter = new Tone.Limiter(-1);
 
-    initReverbBus();
+    //initReverbBus(); //***
 
     // chain master audio and send to main output
     masterEQ.chain(
@@ -161,7 +160,11 @@ function initMasterChain() {
 window.onload = async function () {
     try {
         // audio setup
+        initMasterChain();
+        await initReverbBus();
         initInstruments();
+
+        // set up transport
         Tone.Transport.bpm.value = currentData.bpm;
         initTransport();
 
@@ -212,9 +215,9 @@ function setupAudioLoop() {
         const totalSteps = parseInt(currentData.length) * 16;
         // play the sounds for the current step
         currentData.tracks.forEach((track, index) => {
-            untoggleTrackHit(index);
+            //untoggleTrackHit(index); //***
             if (track.steps[currentStep] == 1) {
-                toggleTrackHit(index);
+                //toggleTrackHit(index); //***
                 playTrackSound(index, time);
             }
         });
@@ -224,6 +227,13 @@ function setupAudioLoop() {
         let stepToDraw = currentStep;
         Tone.Draw.schedule(() => {
             updateUIPlayHead(stepToDraw);
+
+            currentData.tracks.forEach((track, index) => {
+                untoggleTrackHit(index);
+                if (track.steps[currentStep] == 1) {
+                    toggleTrackHit(index);
+                }
+            });
 
             // flash current page to bpm
             if (stepToDraw % 4 === 0) {
@@ -279,7 +289,13 @@ function stopAllSounds() {
 
 async function startTransport() {
     const transport = document.getElementById("transport");
+    await Tone.start(); //***
     Tone.context.resume();
+
+    // initiate reverb if it hasn't started
+    if (masterReverb && !masterReverb.ready) {
+        await masterReverb.generate();
+    }
 
     Tone.Transport.loop = true;
     Tone.Transport.loopEnd = currentData.length;
