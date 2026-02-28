@@ -69,10 +69,10 @@ function initInstruments() {
             wet: track.bitcrusher,
         });
 
-        choruses[i] = new Tone.Chorus(4, 2.5, 0.5).start();
+        choruses[i] = new Tone.Chorus(4, 2.5, 0.5);
         choruses[i].wet.value = track.chorusMix;
 
-        tremolos[i] = new Tone.Tremolo(5, 0.75).start();
+        tremolos[i] = new Tone.Tremolo(5, 0.75);
         tremolos[i].wet.value = track.tremMix;
 
         delays[i] = new Tone.FeedbackDelay("8n", track.delFback);
@@ -99,6 +99,7 @@ function initInstruments() {
             panVols[i],
             masterEQ, // final destination
         );
+    
     }
 }
 
@@ -280,15 +281,21 @@ function playTrackSound(index, time) {
 
 // stop the audio buffer for each instrument immediately
 function stopAllSounds() {
-    instruments.forEach((player) => {
+    instruments.forEach((player, i) => {
         if (player) {
             player.stop();
+        }
+
+        if (ampEnvs[i]) {
+            ampEnvs[i].cancel();
+            ampEnvs[i].triggerRelease();
         }
     });
 }
 
 async function startTransport() {
     const transport = document.getElementById("transport");
+    
     await Tone.start(); //***
     Tone.context.resume();
 
@@ -300,12 +307,17 @@ async function startTransport() {
     Tone.Transport.loop = true;
     Tone.Transport.loopEnd = currentData.length;
 
+    // start LFOs
+    choruses.forEach((c) => c.start());
+    tremolos.forEach((t) => t.start());
+
     // functionality to play
     currentStep = 0;
     updateUIPlayHead(0);
     running = true;
     Tone.Transport.start("+0.1");
     transport.innerHTML = "Stop";
+
 }
 
 function stopTransport() {
@@ -320,6 +332,9 @@ function stopTransport() {
 
     document.querySelectorAll(".step").forEach((el) => {
         el.classList.remove("current");
+    });
+    document.querySelectorAll(".trackBtn").forEach((el) => {
+        el.classList.remove("flash");
     });
     transport.innerHTML = "Play";
 }
