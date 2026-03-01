@@ -63,6 +63,16 @@ header a {
     margin-right: 10px;
 }
 
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:visited {
+    text-decoration: none;
+    color: white;
+}
+
 #header-logo {
     text-shadow: 1px 1px 12px black;
     color: white;
