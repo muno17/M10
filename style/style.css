@@ -1,5 +1,26 @@
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('./Ubuntu-Medium.ttf') format('truetype'); /* The ./ means "same folder" */
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('./Ubuntu-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('./Ubuntu-bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
 body {
-    font-family: ubuntu, "sans-serif", "sans";
+    font-family: 'Ubuntu', sans-serif, serif;
     background-color: #8e90a4;
     color: white;
     display: flex;
@@ -14,6 +35,8 @@ body {
 header {
     display: flex;
     justify-content: space-between;
+
+    
 }
 
 header,
@@ -423,8 +446,8 @@ button.page {
     top: 10px;
     right: 25px;
     font-size: 70px;
-    font-weight: bold;
-    /*align-self: flex-start;*/
+    font-weight: 700;
+    letter-spacing: 7px;
     text-shadow: 1px 1px 8px black;
     margin: 0;
 }
