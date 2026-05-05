@@ -27,21 +27,41 @@ function initMasterParams() {
     initSatMix();
 }
 
-// reverb
-function initDirt() {
-    const dirt = document.getElementById("dirt");
+const masterParams = [
+    {key: "dirt", id: "dirt", display: "Dirt", update: updateDirtUI, set: setMasterDirt},
+    {key: "dirtMix", id: "dirtMix", display: "Dirt Mix", update: updateDirtMixUI, set: setMasterDirtMix},
+    {key: "space", id: "space", display: "Space", update: updateSpaceUI, set: setMasterSpace},
+    {key: "predelay", id: "predelay", display: "Predelay", update: updatePredelayUI, set: setMasterPredelay},
+    {key: "revWidth", id: "revWidth", display: "Reverb Width", update: updateReverbWidthUI, set: setMasterReverbWidth},
+    {key: "eqLow", id: "eqLow", display: "EQ Low", update: updateEqLowUI, set: setMasterEqLow},
+    {key: "eqMid", id: "eqMid", display: "EQ Mid", update: updateEqMidUI, set: setMasterEqMid},
+    {key: "eqHigh", id: "eqHigh", display: "EQ High", update: updateEqHighUI, set: setMasterEqHigh},
+    {key: "compThresh", id: "compThresh", display: "Compressor Threshold", update: updateCompThreshUI, set: setMasterCompThresh},
+    {key: "compRatio", id: "compRatio", display: "Compressor Ratio", update: updateCompRatioUI, set: setMasterCompRatio},
+    {key: "compAttack", id: "compAttack", display: "Compressor Attack", update: updateCompAttackUI, set: setMasterCompAttack},
+    {key: "compRelease", id: "compRelease", display: "Compressor Release", update: updateCompReleaseUI, set: setMasterCompRelease},
+    {key: "compKnee", id: "compKnee", display: "Compressor Knee", update: updateCompKneeUI, set: setMasterCompKnee},
+    {key: "satDrive", id: "satDrive", display: "Saturator Drive", update: updateSatDriveUI, set: setMasterSatDrive},
+    {key: "satTone", id: "satTone", display: "Saturator Tone", update: updateSatToneUI, set: setMasterSatTone},
+    {key: "satMix", id: "satMix", display: "Saturator Mix", update: updateSatMixUI, set: setMasterSatMix},
+]
 
-    dirt.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.dirt = val;
+function initMasterParams() {
+    masterParams.forEach(param => {
+        let currentParam = document.getElementById(param.id);
+        currentParam.addEventListener("input", function() {
+            const val = parseFloat(this.value);
+            currentData.master[param.key] = val;
 
-        updateDirtUI(val);
-        setMasterDirt(val);
+            param.update(val);
+            param.set(val);
 
-        markAsChanged();
-    });
+            markAsChanged();
+        })
+    })
 }
 
+// reverb
 function updateDirtUI(val) {
     const dirt = document.getElementById("dirt");
     const dirtDisplay = document.getElementById("dirtDisplay");
@@ -49,20 +69,6 @@ function updateDirtUI(val) {
     // format the value so it displays 0-100
     dirt.value = val;
     dirtDisplay.innerHTML = parseInt(val);
-}
-
-function initDirtMix() {
-    const dirt = document.getElementById("dirtMix");
-
-    dirt.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.dirtMix = val;
-
-        updateDirtMixUI(val);
-        setMasterDirtMix(val);
-
-        markAsChanged();
-    });
 }
 
 function updateDirtMixUI(val) {
@@ -74,25 +80,6 @@ function updateDirtMixUI(val) {
     dirtDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initSpace() {
-    const space = document.getElementById("space");
-
-    space.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.space = val;
-
-        updateSpaceUI(val);
-        //setMasterSpace(val);
-
-        markAsChanged();
-    });
-
-    space.addEventListener("change", function () {
-        // only trigger when the user stops sliding
-        setMasterSpace(currentData.master.space);
-    });
-}
-
 function updateSpaceUI(val) {
     const space = document.getElementById("space");
     const spaceDisplay = document.getElementById("spaceDisplay");
@@ -102,20 +89,6 @@ function updateSpaceUI(val) {
     spaceDisplay.innerHTML = parseInt(val * 10);
 }
 
-function initPredelay() {
-    const predelay = document.getElementById("predelay");
-
-    predelay.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.predelay = val;
-
-        updatePredelayUI(val);
-        setMasterPredelay(val);
-
-        markAsChanged();
-    });
-}
-
 function updatePredelayUI(val) {
     const predelay = document.getElementById("predelay");
     const predelayDisplay = document.getElementById("predelayDisplay");
@@ -123,20 +96,6 @@ function updatePredelayUI(val) {
     // format the value so it displays 0-100
     predelay.value = val;
     predelayDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initReverbWidth() {
-    const revWidth = document.getElementById("revWidth");
-
-    revWidth.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.revWidth = val;
-
-        updateReverbWidthUI(val);
-        setMasterReverbWidth(val);
-
-        markAsChanged();
-    });
 }
 
 function updateReverbWidthUI(val) {
@@ -149,20 +108,6 @@ function updateReverbWidthUI(val) {
 }
 
 // eq
-function initEqLow() {
-    const eqLow = document.getElementById("eqLow");
-
-    eqLow.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.eqLow = val;
-
-        updateEqLowUI(val);
-        setMasterEqLow(val);
-
-        markAsChanged();
-    });
-}
-
 function updateEqLowUI(val) {
     const eqLow = document.getElementById("eqLow");
     const eqLowDisplay = document.getElementById("eqLowDisplay");
@@ -171,40 +116,12 @@ function updateEqLowUI(val) {
     eqLowDisplay.innerHTML = parseInt(val) + "db";
 }
 
-function initEqMid() {
-    const eqMid = document.getElementById("eqMid");
-
-    eqMid.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.eqMid = val;
-
-        updateEqMidUI(val);
-        setMasterEqMid(val);
-
-        markAsChanged();
-    });
-}
-
 function updateEqMidUI(val) {
     const eqMid = document.getElementById("eqMid");
     const eqMidDisplay = document.getElementById("eqMidDisplay");
 
     eqMid.value = val;
     eqMidDisplay.innerHTML = parseInt(val) + "db";
-}
-
-function initEqHigh() {
-    const eqHigh = document.getElementById("eqHigh");
-
-    eqHigh.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.eqHigh = val;
-
-        updateEqHighUI(val);
-        setMasterEqHigh(val);
-
-        markAsChanged();
-    });
 }
 
 function updateEqHighUI(val) {
@@ -216,20 +133,6 @@ function updateEqHighUI(val) {
 }
 
 // compressor
-function initCompThresh() {
-    const compThresh = document.getElementById("compThresh");
-
-    compThresh.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.compThresh = val;
-
-        updateCompThreshUI(val);
-        setMasterCompThresh(val);
-
-        markAsChanged();
-    });
-}
-
 function updateCompThreshUI(val) {
     const compThresh = document.getElementById("compThresh");
     const compThreshDisplay = document.getElementById("compThreshDisplay");
@@ -260,20 +163,6 @@ function updateCompRatioUI(val) {
     compRatioDisplay.innerHTML = parseInt(val);
 }
 
-function initCompAttack() {
-    const compAttack = document.getElementById("compAttack");
-
-    compAttack.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.compAttack = val;
-
-        updateCompAttackUI(val);
-        setMasterCompAttack(val);
-
-        markAsChanged();
-    });
-}
-
 function updateCompAttackUI(val) {
     const compAttack = document.getElementById("compAttack");
     const compAttackDisplay = document.getElementById("compAttackDisplay");
@@ -282,40 +171,12 @@ function updateCompAttackUI(val) {
     compAttackDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initCompRelease() {
-    const compRelease = document.getElementById("compRelease");
-
-    compRelease.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.compRelease = val;
-
-        updateCompReleaseUI(val);
-        setMasterCompRelease(val);
-
-        markAsChanged();
-    });
-}
-
 function updateCompReleaseUI(val) {
     const compRelease = document.getElementById("compRelease");
     const compReleaseDisplay = document.getElementById("compReleaseDisplay");
 
     compRelease.value = val;
     compReleaseDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initCompKnee() {
-    const compKnee = document.getElementById("compKnee");
-
-    compKnee.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.compKnee = val;
-
-        updateCompKneeUI(val);
-        setMasterCompKnee(val);
-
-        markAsChanged();
-    });
 }
 
 function updateCompKneeUI(val) {
@@ -327,20 +188,6 @@ function updateCompKneeUI(val) {
 }
 
 //saturator
-function initSatDrive() {
-    const satDrive = document.getElementById("satDrive");
-
-    satDrive.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.satDrive = val;
-
-        updateSatDriveUI(val);
-        setMasterSatDrive(val);
-
-        markAsChanged();
-    });
-}
-
 function updateSatDriveUI(val) {
     const satDrive = document.getElementById("satDrive");
     const satDriveDisplay = document.getElementById("satDriveDisplay");
@@ -350,20 +197,6 @@ function updateSatDriveUI(val) {
     satDriveDisplay.innerHTML = parseInt(val * 200);
 }
 
-function initSatTone() {
-    const satTone = document.getElementById("satTone");
-
-    satTone.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.satTone = val;
-
-        updateSatToneUI(val);
-        setMasterSatTone(val);
-
-        markAsChanged();
-    });
-}
-
 function updateSatToneUI(val) {
     const satTone = document.getElementById("satTone");
     const satToneDisplay = document.getElementById("satToneDisplay");
@@ -371,20 +204,6 @@ function updateSatToneUI(val) {
     // format the value so it displays 0-100
     satTone.value = val;
     satToneDisplay.innerHTML = parseInt(val * 0.005);
-}
-
-function initSatMix() {
-    const satMix = document.getElementById("satMix");
-
-    satMix.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.master.satMix = val;
-
-        updateSatMixUI(val);
-        setMasterSatMix(val);
-
-        markAsChanged();
-    });
 }
 
 function updateSatMixUI(val) {

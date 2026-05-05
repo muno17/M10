@@ -33,14 +33,13 @@ const trackParams = [
 
 function initTrackParams() {
     trackParams.forEach(param => {
-        console.log(param);
         let currentParam = document.getElementById(param.id);
         currentParam.addEventListener("input", function() {
             const val = parseFloat(this.value);
             currentData.tracks[currentTrack][param.key] = val;
 
-            currentParam.update(val);
-            currentParam.set(val);
+            param.update(val);
+            param.set(val);
 
             markAsChanged();
         })
