@@ -4,47 +4,47 @@
 // listeners for all track parameters
 // update changes if any parameter is changed
 
+const trackParams = [
+    {key: "volume", id: "volume", display: "Volume", update: updateVolumeUI, set: setTrackVolume},
+    {key: "pan", id: "pan", display: "Pan", update: updatePanUI, set: setTrackPan},
+    {key: "pitch", id: "pitch", display: "Pitch", update: updatePitchUI, set: setTrackPitch},
+    {key: "start", id: "start", display: "Start", update: updateStartUI, set: setTrackStart},
+    {key: "attack", id: "attack", display: "Attack", update: updateAttackUI, set: setTrackAttack},
+    {key: "decay", id: "decay", display: "Decay", update: updateDecayUI, set: setTrackDecay},
+    {key: "sustain", id: "sustain", display: "Sustain", update: updateSustainUI, set: setTrackSustain},
+    {key: "release", id: "release", display: "Release", update: updateReleaseUI, set: setTrackRelease},
+    {key: "lpWidth", id: "lpWidth", display: "LP Width", update: updateLpWidthUI, set: setTrackLpWidth},
+    {key: "lpq", id: "lpq", display: "LP Q", update: updateLpQUI, set: setTrackLpQ},
+    {key: "hpWidth", id: "hpWidth", display: "HP Width", update: updateHpWidthUI, set: setTrackHpWidth},
+    {key: "hpq", id: "hpq", display: "HP Q", update: updateHpQUI, set: setTrackHpQ},
+    {key: "distortion", id: "distortion", display: "Distortion", update: updateDistortionUI, set: setTrackDistortion},
+    {key: "bitcrusher", id: "bitcrusher", display: "Bitcrusher", update: updateBitcrusherUI, set: setTrackBitcrusher},
+    {key: "chorusRate", id: "chorusRate", display: "Chorus Rate", update: updateChorusRateUI, set: setTrackChorusRate},
+    {key: "chorusDepth", id: "chorusDepth", display: "Chorus Depth", update: updateChorusDepthUI, set: setTrackChorusDepth},
+    {key: "chorusMix", id: "chorusMix", display: "Chorus Mix", update: updateChorusMixUI, set: setTrackChorusMix},
+    {key: "tremRate", id: "tremRate", display: "Tremolo Rate", update: updateTremoloRateUI, set: setTrackTremoloRate},
+    {key: "tremDepth", id: "tremDepth", display: "Tremolo Depth", update: updateTremoloDepthUI, set: setTrackTremoloDepth},
+    {key: "tremMix", id: "tremMix", display: "Tremolo Mix", update: updateTremoloMixUI, set: setTrackTremoloMix},
+    {key: "delTime", id: "delTime", display: "Delay Time", update: updateDelayTimeUI, set: setTrackDelayTime},
+    {key: "delFback", id: "delFback", display: "Delay Feedback", update: updateDelayFeedbackUI, set: setTrackDelayFeedback},
+    {key: "delMix", id: "delMix", display: "Delay Mix", update: updateDelayMixUI, set: setTrackDelayMix},
+    {key: "reverb", id: "reverb", display: "Reverb", update: updateReverbSendUI, set: setTrackReverbSend},
+]
+
 function initTrackParams() {
-    initVol();
-    initPan();
-    initPitch();
-    initStart();
-    initAttack();
-    initDecay();
-    initSustain();
-    initRelease();
-    initLpWidth();
-    initLpQ();
-    initHpWidth();
-    initHpQ();
+    trackParams.forEach(param => {
+        console.log(param);
+        let currentParam = document.getElementById(param.id);
+        currentParam.addEventListener("input", function() {
+            const val = parseFloat(this.value);
+            currentData.tracks[currentTrack][param.key] = val;
 
-    // effects
-    initDistortion();
-    initBitcrusher();
-    initChorusRate();
-    initChorusDepth();
-    initChorusMix();
-    initTremoloRate();
-    initTremoloDepth();
-    initTremoloMix();
-    initDelayTime();
-    initDelayFeedback();
-    initDelayMix();
-    initReverbSend();
-}
+            currentParam.update(val);
+            currentParam.set(val);
 
-function initVol() {
-    const volume = document.getElementById("volume");
-
-    volume.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].volume = val;
-
-        updateVolumeUI(val);
-        setTrackVolume(val);
-
-        markAsChanged();
-    });
+            markAsChanged();
+        })
+    })
 }
 
 function updateVolumeUI(val) {
@@ -55,19 +55,6 @@ function updateVolumeUI(val) {
     volumeDisplay.innerHTML = val + "dB";
 }
 
-function initPan() {
-    const pan = document.getElementById("pan");
-
-    pan.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].pan = val;
-
-        updatePanUI(val);
-        setTrackPan(val);
-
-        markAsChanged();
-    });
-}
 
 function updatePanUI(val) {
     const pan = document.getElementById("pan");
@@ -78,19 +65,6 @@ function updatePanUI(val) {
     panDisplay.innerHTML = parseInt(val * 50);
 }
 
-function initPitch() {
-    const pitch = document.getElementById("pitch");
-
-    pitch.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].pitch = val;
-
-        updatePitchUI(val);
-        setTrackPitch(val);
-
-        markAsChanged();
-    });
-}
 
 function updatePitchUI(val) {
     const pitch = document.getElementById("pitch");
@@ -108,20 +82,6 @@ function updatePitchUI(val) {
     pitchDisplay.innerHTML = sign + formattedVal;
 }
 
-function initStart() {
-    const start = document.getElementById("start");
-
-    start.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].start = val;
-
-        updateStartUI(val);
-        setTrackStart(val);
-
-        markAsChanged();
-    });
-}
-
 function updateStartUI(val) {
     const start = document.getElementById("start");
     const startDisplay = document.getElementById("startDisplay");
@@ -129,20 +89,6 @@ function updateStartUI(val) {
     // format the value so it displays 0-100
     start.value = val;
     startDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initAttack() {
-    const attack = document.getElementById("attack");
-
-    attack.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].attack = val;
-
-        updateAttackUI(val);
-        setTrackAttack(val);
-
-        markAsChanged();
-    });
 }
 
 function updateAttackUI(val) {
@@ -154,20 +100,6 @@ function updateAttackUI(val) {
     attackDisplay.innerHTML = parseInt(val * 50);
 }
 
-function initDecay() {
-    const decay = document.getElementById("decay");
-
-    decay.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].decay = val;
-
-        updateDecayUI(val);
-        setTrackDecay(val);
-
-        markAsChanged();
-    });
-}
-
 function updateDecayUI(val) {
     const decay = document.getElementById("decay");
     const decayDisplay = document.getElementById("decayDisplay");
@@ -177,19 +109,6 @@ function updateDecayUI(val) {
     decayDisplay.innerHTML = parseInt(val * 50);
 }
 
-function initSustain() {
-    const sustain = document.getElementById("sustain");
-
-    sustain.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].sustain = val;
-
-        updateSustainUI(val);
-        setTrackSustain(val);
-
-        markAsChanged();
-    });
-}
 
 function updateSustainUI(val) {
     const sustain = document.getElementById("sustain");
@@ -200,20 +119,6 @@ function updateSustainUI(val) {
     sustainDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initRelease() {
-    const release = document.getElementById("release");
-
-    release.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].release = val;
-
-        updateReleaseUI(val);
-        setTrackRelease(val);
-
-        markAsChanged();
-    });
-}
-
 function updateReleaseUI(val) {
     const release = document.getElementById("release");
     const releaseDisplay = document.getElementById("releaseDisplay");
@@ -221,20 +126,6 @@ function updateReleaseUI(val) {
     // format the value so it displays 0-100
     release.value = val;
     releaseDisplay.innerHTML = parseInt(val * 20);
-}
-
-function initLpWidth() {
-    const lp = document.getElementById("lpWidth");
-
-    lp.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].lpWidth = val;
-
-        updateLpWidthUI(val);
-        setTrackLpWidth(val);
-
-        markAsChanged();
-    });
 }
 
 function updateLpWidthUI(val) {
@@ -250,20 +141,6 @@ function updateLpWidthUI(val) {
     }
 }
 
-function initLpQ() {
-    const q = document.getElementById("lpq");
-
-    q.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].lpq = val;
-
-        updateLpQUI(val);
-        setTrackLpQ(val);
-
-        markAsChanged();
-    });
-}
-
 function updateLpQUI(val) {
     const q = document.getElementById("lpq");
     const qWidthDisplay = document.getElementById("lpqDisplay");
@@ -271,20 +148,6 @@ function updateLpQUI(val) {
     // format the value so it displays 0-100
     q.value = val;
     qWidthDisplay.innerHTML = parseInt(val * 5);
-}
-
-function initHpWidth() {
-    const hp = document.getElementById("hpWidth");
-
-    hp.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].hpWidth = val;
-
-        updateHpWidthUI(val);
-        setTrackHpWidth(val);
-
-        markAsChanged();
-    });
 }
 
 function updateHpWidthUI(val) {
@@ -300,20 +163,6 @@ function updateHpWidthUI(val) {
     }
 }
 
-function initHpQ() {
-    const q = document.getElementById("hpq");
-
-    q.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].hpq = val;
-
-        updateHpQUI(val);
-        setTrackHpQ(val);
-
-        markAsChanged();
-    });
-}
-
 function updateHpQUI(val) {
     const q = document.getElementById("hpq");
     const qWidthDisplay = document.getElementById("hpqDisplay");
@@ -324,20 +173,6 @@ function updateHpQUI(val) {
 }
 
 ///////////////////////// Track Effects \\\\\\\\\\\\\\\\\\\\\\\\\\
-function initDistortion() {
-    const distortion = document.getElementById("distortion");
-
-    distortion.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].distortion = val;
-
-        updateDistortionUI(val);
-        setTrackDistortion(val);
-
-        markAsChanged();
-    });
-}
-
 function updateDistortionUI(val) {
     const distortion = document.getElementById("distortion");
     const distortionDisplay = document.getElementById("distortionDisplay");
@@ -347,41 +182,13 @@ function updateDistortionUI(val) {
     distortionDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initBitcrusher() {
-    const bc = document.getElementById("bc");
-
-    bc.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].bitcrusher = val;
-
-        updateBitcrusherUI(val);
-        setTrackBitcrusher(val);
-
-        markAsChanged();
-    });
-}
-
 function updateBitcrusherUI(val) {
-    const bc = document.getElementById("bc");
-    const bcDisplay = document.getElementById("bcDisplay");
+    const bitcrusher = document.getElementById("bitcrusher");
+    const bitcrusherDisplay = document.getElementById("bitcrusherDisplay");
 
     // format the value so it displays 0-100
-    bc.value = val;
-    bcDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initChorusRate() {
-    const rate = document.getElementById("chorusRate");
-
-    rate.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].chorusRate = val;
-
-        updateChorusRateUI(val);
-        setTrackChorusRate(val);
-
-        markAsChanged();
-    });
+    bitcrusher.value = val;
+    bitcrusherDisplay.innerHTML = parseInt(val * 100);
 }
 
 function updateChorusRateUI(val) {
@@ -393,20 +200,6 @@ function updateChorusRateUI(val) {
     rateDisplay.innerHTML = parseInt(val * 20);
 }
 
-function initChorusDepth() {
-    const depth = document.getElementById("chorusDepth");
-
-    depth.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].chorusDepth = val;
-
-        updateChorusDepthUI(val);
-        setTrackChorusDepth(val);
-
-        markAsChanged();
-    });
-}
-
 function updateChorusDepthUI(val) {
     const depth = document.getElementById("chorusDepth");
     const depthDisplay = document.getElementById("chorusDepthDisplay");
@@ -414,20 +207,6 @@ function updateChorusDepthUI(val) {
     // format the value so it displays 0-100
     depth.value = val;
     depthDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initChorusMix() {
-    const mix = document.getElementById("chorusMix");
-
-    mix.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].chorusMix = val;
-
-        updateChorusMixUI(val);
-        setTrackChorusMix(val);
-
-        markAsChanged();
-    });
 }
 
 function updateChorusMixUI(val) {
@@ -439,20 +218,6 @@ function updateChorusMixUI(val) {
     mixDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initTremoloRate() {
-    const rate = document.getElementById("tremRate");
-
-    rate.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].tremRate = val;
-
-        updateTremoloRateUI(val);
-        setTrackTremoloRate(val);
-
-        markAsChanged();
-    });
-}
-
 function updateTremoloRateUI(val) {
     const rate = document.getElementById("tremRate");
     const rateDisplay = document.getElementById("tremRateDisplay");
@@ -460,20 +225,6 @@ function updateTremoloRateUI(val) {
     // format the value so it displays 0-100
     rate.value = val;
     rateDisplay.innerHTML = parseInt(val * 5);
-}
-
-function initTremoloDepth() {
-    const depth = document.getElementById("tremDepth");
-
-    depth.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].tremDepth = val;
-
-        updateTremoloDepthUI(val);
-        setTrackTremoloDepth(val);
-
-        markAsChanged();
-    });
 }
 
 function updateTremoloDepthUI(val) {
@@ -485,20 +236,6 @@ function updateTremoloDepthUI(val) {
     depthDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initTremoloMix() {
-    const mix = document.getElementById("tremMix");
-
-    mix.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].tremMix = val;
-
-        updateTremoloMixUI(val);
-        setTrackTremoloMix(val);
-
-        markAsChanged();
-    });
-}
-
 function updateTremoloMixUI(val) {
     const mix = document.getElementById("tremMix");
     const mixDisplay = document.getElementById("tremMixDisplay");
@@ -506,20 +243,6 @@ function updateTremoloMixUI(val) {
     // format the value so it displays 0-100
     mix.value = val;
     mixDisplay.innerHTML = parseInt(val * 100);
-}
-
-function initDelayTime() {
-    const time = document.getElementById("delTime");
-
-    time.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].delTime = val;
-
-        updateDelayTimeUI(val);
-        setTrackDelayTime(val);
-
-        markAsChanged();
-    });
 }
 
 function updateDelayTimeUI(val) {
@@ -531,20 +254,6 @@ function updateDelayTimeUI(val) {
     timeDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initDelayFeedback() {
-    const feedback = document.getElementById("delFback");
-
-    feedback.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].delFback = val;
-
-        updateDelayFeedbackUI(val);
-        setTrackDelayFeedback(val);
-
-        markAsChanged();
-    });
-}
-
 function updateDelayFeedbackUI(val) {
     const feedback = document.getElementById("delFback");
     const feedbackDisplay = document.getElementById("delFbackDisplay");
@@ -552,20 +261,6 @@ function updateDelayFeedbackUI(val) {
     // format the value so it displays 0-100
     feedback.value = val;
     feedbackDisplay.innerHTML = parseInt(val * 111.11);
-}
-
-function initDelayMix() {
-    const mix = document.getElementById("delMix");
-
-    mix.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].delMix = val;
-
-        updateDelayMixUI(val);
-        setTrackDelayMix(val);
-
-        markAsChanged();
-    });
 }
 
 function updateDelayMixUI(val) {
@@ -577,23 +272,9 @@ function updateDelayMixUI(val) {
     mixDisplay.innerHTML = parseInt(val * 100);
 }
 
-function initReverbSend() {
-    const send = document.getElementById("revSend");
-
-    send.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.tracks[currentTrack].reverb = val;
-
-        updateReverbSendUI(val);
-        setTrackReverbSend(val);
-
-        markAsChanged();
-    });
-}
-
 function updateReverbSendUI(val) {
-    const send = document.getElementById("revSend");
-    const sendDisplay = document.getElementById("revSendDisplay");
+    const send = document.getElementById("reverb");
+    const sendDisplay = document.getElementById("reverbDisplay");
 
     // format the value so it displays 0-100
     send.value = val;
