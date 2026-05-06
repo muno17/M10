@@ -1,32 +1,6 @@
 // master track specific UI
 
 ///////////////////////// Master Effects \\\\\\\\\\\\\\\\\\\\\\\\\\
-function initMasterParams() {
-    // reverb
-    initDirt();
-    initDirtMix();
-    initSpace();
-    initPredelay();
-    initReverbWidth();
-
-    // eq
-    initEqLow();
-    initEqMid();
-    initEqHigh();
-
-    // compressor
-    initCompThresh();
-    initCompRatio();
-    initCompAttack();
-    initCompRelease();
-    initCompKnee();
-
-    // saturator
-    initSatDrive();
-    initSatTone();
-    initSatMix();
-}
-
 const masterParams = [
     {key: "dirt", id: "dirt", display: "Dirt", update: updateDirtUI, set: setMasterDirt},
     {key: "dirtMix", id: "dirtMix", display: "Dirt Mix", update: updateDirtMixUI, set: setMasterDirtMix},

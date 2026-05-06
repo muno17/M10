@@ -627,33 +627,10 @@ function renderTrackParams() {
         samplesDropdown.value = "";
     }
 
-    // params
-    updateVolumeUI(track.volume);
-    updatePanUI(track.pan);
-    updatePitchUI(track.pitch);
-    updateStartUI(track.start);
-    updateAttackUI(track.attack);
-    updateDecayUI(track.decay);
-    updateSustainUI(track.sustain);
-    updateReleaseUI(track.release);
-    updateLpWidthUI(track.lpWidth);
-    updateLpQUI(track.lpq);
-    updateHpWidthUI(track.hpWidth);
-    updateHpQUI(track.hpq);
-
-    // effects
-    updateDistortionUI(track.distortion);
-    updateBitcrusherUI(track.bitcrusher);
-    updateChorusRateUI(track.chorusRate);
-    updateChorusDepthUI(track.chorusDepth);
-    updateChorusMixUI(track.chorusMix);
-    updateTremoloRateUI(track.tremRate);
-    updateTremoloDepthUI(track.tremDepth);
-    updateTremoloMixUI(track.tremMix);
-    updateDelayTimeUI(track.delTime);
-    updateDelayFeedbackUI(track.delFback);
-    updateDelayMixUI(track.delMix);
-    updateReverbSendUI(track.reverb);
+    trackParams.forEach(param => {
+        const val = track[param.key];
+        updateTrackParamUI(val, param.key, param.display(val));
+    });
 }
 
 function syncTrackParams() {
