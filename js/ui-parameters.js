@@ -2,7 +2,7 @@
 
 ///////////////////////// Track Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
 const trackParams = [
-    {key: "volume", display: volumeDisplay, set: setTrackVolume},
+    {key: "volume", display: dbDisplay, set: setTrackVolume},
     {key: "pan", display: (v) => intDisplay(v, 50), set: setTrackPan},
     {key: "pitch", display: pitchDisplay, set: setTrackPitch},
     {key: "start", display: (v) => intDisplay(v, 100), set: setTrackStart},
@@ -55,7 +55,7 @@ function initTrackParams() {
             const val = parseFloat(this.value);
             currentData.tracks[currentTrack][param.key] = val;
 
-            updateTrackParamUI(val, param.key, param.display(val));
+            updateParamUI(val, param.key, param.display(val));
             param.set(val);
 
             markAsChanged();
@@ -70,7 +70,7 @@ function initMasterParams() {
             const val = parseFloat(this.value);
             currentData.master[param.key] = val;
 
-            updateMasterParamUI(val, param.key, param.display(val));
+            updateParamUI(val, param.key, param.display(val));
             param.set(val);
 
             markAsChanged();
@@ -86,24 +86,12 @@ function updateParamUI(val, key, display) {
     paramDisplay.innerHTML = display;
 }
 
-function updateTrackParamUI(val, key, display) {
-    updateParamUI(val, key, display);
-}
-
-function updateMasterParamUI(val, key, display) {
-    updateParamUI(val, key, display);
-}
-
 function intDisplay(val, multiplier) {
     return parseInt(val * multiplier);
 }
 
 function dbDisplay(val) {
     return parseInt(val) + "db";
-}
-
-function volumeDisplay(val) {
-    return val + "dB";
 }
 
 function pitchDisplay(val) {

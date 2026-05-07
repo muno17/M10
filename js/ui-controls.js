@@ -598,7 +598,7 @@ function renderMasterParams() {
     // master effects
     masterParams.forEach(param => {
         const val = master[param.key];
-        updateMasterParamUI(val, param.key, param.display(val));
+        updateParamUI(val, param.key, param.display(val));
     });
 }
 
@@ -617,7 +617,7 @@ function renderTrackParams() {
 
     trackParams.forEach(param => {
         const val = track[param.key];
-        updateTrackParamUI(val, param.key, param.display(val));
+        updateParamUI(val, param.key, param.display(val));
     });
 }
 
