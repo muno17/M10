@@ -79,73 +79,6 @@ function initRecord() {
     });
 }
 
-function initTempo() {
-    const tempo = document.getElementById("tempo");
-
-    tempo.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.bpm = val;
-
-        updateTempoUI(val);
-        setTempo(val);
-
-        markAsChanged();
-    });
-}
-
-function updateTempoUI(val) {
-    const tempo = document.getElementById("tempo");
-    const tempoDisplay = document.getElementById("tempoDisplay");
-
-    tempo.value = val;
-   tempoDisplay.innerHTML = parseInt(val);
-}
-
-function initMasterVol() {
-    const masterVol = document.getElementById("masterVol");
-
-    masterVol.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.masterVolume = val;
-
-        updateMasterVolUI(val);
-        setMasterVol(val);
-
-        markAsChanged();
-    });
-}
-
-function updateMasterVolUI(val) {
-    const masterVol = document.getElementById("masterVol");
-    const masterVolDisplay = document.getElementById("masterVolDisplay");
-
-    masterVol.value = val;
-    masterVolDisplay.innerHTML = parseInt(val) + "dB";
-}
-
-function initSwing() {
-    Tone.Transport.swingSubdivision = "16n";
-    const swing = document.getElementById("swing");
-
-    swing.addEventListener("input", function () {
-        const val = parseFloat(this.value);
-        currentData.swing = val;
-
-        updateSwingUI(val);
-        setSwing(val);
-
-        markAsChanged();
-    });
-}
-
-function updateSwingUI(val) {
-    const swing = document.getElementById("swing");
-    const swingDisplay = document.getElementById("swingDisplay");
-
-    swing.value = val;
-    swingDisplay.innerHTML = parseInt(val * 100);
-}
-
 function initPageSelectors() {
     const pageBtns = document.querySelectorAll(".page");
 
@@ -457,8 +390,9 @@ function resetInterface() {
     renderSequencer();
     updateUIPlayHead(0);
 
-    document.getElementById("tempo").value = currentData.bpm;
-    document.getElementById("tempoDisplay").innerText = currentData.bpm;
+    const tempoVal = currentData.tempo;
+    document.getElementById("tempo").value = tempoVal;
+    document.getElementById("tempoDisplay").innerText = tempoVal;
     document.getElementById("masterVol").value = currentData.masterVolume;
 }
 
@@ -504,9 +438,7 @@ function togglePageHit(step) {
 }
 
 function initGlobalControls() {
-    initTempo();
-    initMasterVol();
-    initSwing();
+    initGlobalMasterControls();
     initPageSelectors();
     initSave();
     initReload();
@@ -589,10 +521,11 @@ function renderMasterParams() {
     masterRows.forEach((row) => {
         row.classList.remove("hidden");
     });
+
     // master UI
-    updateMasterVolUI(currentData.masterVolume);
-    updateTempoUI(currentData.bpm);
-    updateSwingUI(currentData.swing);
+    globalMasterControls.forEach((param) => {
+        updateGlobalMasterControlUI(param, currentData[param.key]);
+    });
     updatePageVisuals(parseInt(currentData.length))
 
     // master effects
@@ -622,69 +555,32 @@ function renderTrackParams() {
 }
 
 function syncTrackParams() {
-        currentData.tracks.forEach((track, index) => {
-            if (track.id === 99) return;
+    const originalViewTrack = currentTrack;
 
-            let originalViewTrack = currentTrack;
-            currentTrack = index;
+    currentData.tracks.forEach((track, index) => {
+        if (track.id === 99) return;
 
-            // params
-            setTrackVolume(track.volume, true);
-            setTrackPan(track.pan, true);
-            setTrackPitch(track.pitch);
-            setTrackStart(track.start);
-            setTrackAttack(track.attack);
-            setTrackDecay(track.decay);
-            setTrackSustain(track.sustain);
-            setTrackRelease(track.release);
-            setTrackLpWidth(track.lpWidth);
-            setTrackLpQ(track.lpq);
-            setTrackHpWidth(track.hpWidth);
-            setTrackHpQ(track.hpq);
-
-            // effects
-            setTrackDistortion(track.distortion);
-            setTrackBitcrusher(track.bitcrusher);
-            setTrackChorusRate(track.chorusRate);
-            setTrackChorusDepth(track.chorusDepth);
-            setTrackChorusMix(track.chorusMix);
-            setTrackTremoloRate(track.tremRate);
-            setTrackTremoloDepth(track.tremDepth);
-            setTrackTremoloMix(track.tremMix);
-            setTrackDelayTime(track.delTime);
-            setTrackDelayFeedback(track.delFback);
-            setTrackDelayMix(track.delMix);
-            setTrackReverbSend(track.reverb);
-
-            currentTrack = originalViewTrack;
+        currentTrack = index;
+        trackParams.forEach((param) => {
+            param.set(track[param.key]);
         });
+    });
+
+    currentTrack = originalViewTrack;
 }
 
 function syncMasterParams() {
     const master = currentData.master;
 
     // master controls
-    setMasterVol(currentData.masterVolume);
-    setTempo(currentData.bpm);
-    setSwing(currentData.swing);
+    globalMasterControls.forEach((control) => {
+        control.set(currentData[control.key]);
+    });
 
     // master effects
-    setMasterDirt(master.dirt);
-    setMasterDirtMix(master.dirtMix);
-    setMasterSpace(master.space);
-    setMasterPredelay(master.predelay);
-    setMasterReverbWidth(master.revWidth);
-    setMasterEqLow(master.eqLow);
-    setMasterEqMid(master.eqMid);
-    setMasterEqHigh(master.eqHigh);
-    setMasterSatDrive(master.satDrive);
-    setMasterSatTone(master.satTone);
-    setMasterSatMix(master.satMix);
-    setMasterCompThresh(master.compThresh);
-    setMasterCompRatio(master.compRatio);
-    setMasterCompAttack(master.compAttack);
-    setMasterCompRelease(master.compRelease);
-    setMasterCompKnee(master.compKnee);
+    masterParams.forEach((param) => {
+        param.set(master[param.key]);
+    });
 }
 
 function resetParams() {

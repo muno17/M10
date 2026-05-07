@@ -17,7 +17,7 @@ var openModal = null;
 var initData = {
     id: null,
     name: "",
-    bpm: 120,
+    tempo: 120,
     swing: 0,
     masterVolume: -6,
     length: "1m",

@@ -48,6 +48,13 @@ const masterParams = [
     {key: "satMix", display: (v) => intDisplay(v, 100), set: setMasterSatMix},
 ];
 
+///////////////////////// Global Master Controls \\\\\\\\\\\\\\\\\\\\\\\\\\
+const globalMasterControls = [
+    {key: "tempo", display: (v) => intDisplay(v, 1), set: setTempo},
+    {key: "masterVolume", display: dbDisplay, set: setMasterVol},
+    {key: "swing", display: (v) => intDisplay(v, 100), set: setSwing},
+];
+
 function initTrackParams() {
     trackParams.forEach(param => {
         let currentParam = document.getElementById(param.key);
@@ -76,6 +83,31 @@ function initMasterParams() {
             markAsChanged();
         });
     });
+}
+
+function initGlobalMasterControls() {
+    Tone.Transport.swingSubdivision = "16n";
+
+    globalMasterControls.forEach((param) => {
+        const currentParam = document.getElementById(param.key);
+        currentParam.addEventListener("input", function () {
+            const val = parseFloat(this.value);
+            currentData[param.key] = val;
+
+            updateParamUI(val, param.key, param.display(val));
+            param.set(val);
+
+            markAsChanged();
+        });
+    });
+}
+
+function updateGlobalMasterControlUI(param, val) {
+    const input = document.getElementById(param.key);
+    const display = document.getElementById(param.key + "Display");
+
+    input.value = val;
+    display.innerHTML = param.display(val);
 }
 
 function updateParamUI(val, key, display) {

@@ -165,7 +165,7 @@ window.onload = async function () {
         initInstruments();
 
         // set up transport
-        Tone.Transport.bpm.value = currentData.bpm;
+        Tone.Transport.bpm.value = currentData.tempo;
         initTransport();
 
         // control setup
