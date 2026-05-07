@@ -1,9 +1,6 @@
-// track specific UI
+// track and master parameter UI
 
 ///////////////////////// Track Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
-// listeners for all track parameters
-// update changes if any parameter is changed
-
 const trackParams = [
     {key: "volume", display: volumeDisplay, set: setTrackVolume},
     {key: "pan", display: (v) => intDisplay(v, 50), set: setTrackPan},
@@ -29,7 +26,27 @@ const trackParams = [
     {key: "delFback", display: (v) => intDisplay(v, 111.11), set: setTrackDelayFeedback},
     {key: "delMix", display: (v) => intDisplay(v, 100), set: setTrackDelayMix},
     {key: "reverb", display: (v) => intDisplay(v, 100), set: setTrackReverbSend},
-]
+];
+
+///////////////////////// Master Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
+const masterParams = [
+    {key: "dirt", display: (v) => intDisplay(v, 1), set: setMasterDirt},
+    {key: "dirtMix", display: (v) => intDisplay(v, 100), set: setMasterDirtMix},
+    {key: "space", display: (v) => intDisplay(v, 10), set: setMasterSpace},
+    {key: "predelay", display: (v) => intDisplay(v, 100), set: setMasterPredelay},
+    {key: "revWidth", display: (v) => intDisplay(v, 100), set: setMasterReverbWidth},
+    {key: "eqLow", display: dbDisplay, set: setMasterEqLow},
+    {key: "eqMid", display: dbDisplay, set: setMasterEqMid},
+    {key: "eqHigh", display: dbDisplay, set: setMasterEqHigh},
+    {key: "compThresh", display: dbDisplay, set: setMasterCompThresh},
+    {key: "compRatio", display: (v) => intDisplay(v, 1), set: setMasterCompRatio},
+    {key: "compAttack", display: (v) => intDisplay(v, 100), set: setMasterCompAttack},
+    {key: "compRelease", display: (v) => intDisplay(v, 100), set: setMasterCompRelease},
+    {key: "compKnee", display: (v) => intDisplay(v, 1), set: setMasterCompKnee},
+    {key: "satDrive", display: (v) => intDisplay(v, 200), set: setMasterSatDrive},
+    {key: "satTone", display: (v) => intDisplay(v, 0.005), set: setMasterSatTone},
+    {key: "satMix", display: (v) => intDisplay(v, 100), set: setMasterSatMix},
+];
 
 function initTrackParams() {
     trackParams.forEach(param => {
@@ -42,11 +59,26 @@ function initTrackParams() {
             param.set(val);
 
             markAsChanged();
-        })
-    })
+        });
+    });
 }
 
-function updateTrackParamUI(val, key, display) {
+function initMasterParams() {
+    masterParams.forEach(param => {
+        let currentParam = document.getElementById(param.key);
+        currentParam.addEventListener("input", function() {
+            const val = parseFloat(this.value);
+            currentData.master[param.key] = val;
+
+            updateMasterParamUI(val, param.key, param.display(val));
+            param.set(val);
+
+            markAsChanged();
+        });
+    });
+}
+
+function updateParamUI(val, key, display) {
     const param = document.getElementById(key);
     const paramDisplay = document.getElementById(key + "Display");
 
@@ -54,8 +86,20 @@ function updateTrackParamUI(val, key, display) {
     paramDisplay.innerHTML = display;
 }
 
+function updateTrackParamUI(val, key, display) {
+    updateParamUI(val, key, display);
+}
+
+function updateMasterParamUI(val, key, display) {
+    updateParamUI(val, key, display);
+}
+
 function intDisplay(val, multiplier) {
     return parseInt(val * multiplier);
+}
+
+function dbDisplay(val) {
+    return parseInt(val) + "db";
 }
 
 function volumeDisplay(val) {
@@ -65,7 +109,7 @@ function volumeDisplay(val) {
 function pitchDisplay(val) {
     const num = parseFloat(val);
     const formattedVal = num.toFixed(1);
-    var sign = "";
+    let sign = "";
     if (num > 0) {
         sign = "+";
     }
@@ -75,7 +119,6 @@ function pitchDisplay(val) {
 function filterWidthDisplay(val) {
     if (val >= 1000) {
         return (val / 1000).toFixed(1) + "kHz";
-    } else {
-        return Math.round(val) + "Hz";
     }
+    return Math.round(val) + "Hz";
 }

@@ -596,22 +596,10 @@ function renderMasterParams() {
     updatePageVisuals(parseInt(currentData.length))
 
     // master effects
-    updateDirtUI(master.dirt);
-    updateDirtMixUI(master.dirtMix);
-    updateSpaceUI(master.space);
-    updatePredelayUI(master.predelay);
-    updateReverbWidthUI(master.revWidth);
-    updateEqLowUI(master.eqLow);
-    updateEqMidUI(master.eqMid);
-    updateEqHighUI(master.eqHigh);
-    updateSatDriveUI(master.satDrive);
-    updateSatToneUI(master.satTone);
-    updateSatMixUI(master.satMix);
-    updateCompThreshUI(master.compThresh);
-    updateCompRatioUI(master.compRatio);
-    updateCompAttackUI(master.compAttack);
-    updateCompReleaseUI(master.compRelease);
-    updateCompKneeUI(master.compKnee);
+    masterParams.forEach(param => {
+        const val = master[param.key];
+        updateMasterParamUI(val, param.key, param.display(val));
+    });
 }
 
 // update all params to track's saved value
