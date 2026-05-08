@@ -55,50 +55,38 @@ const globalMasterControls = [
     {key: "swing", display: (v) => intDisplay(v, 100), set: setSwing},
 ];
 
-function initTrackParams() {
-    trackParams.forEach(param => {
-        let currentParam = document.getElementById(param.key);
-        currentParam.addEventListener("input", function() {
+function initParams(params, setState) {
+    params.forEach((param) => {
+        const currentParam = document.getElementById(param.key);
+        currentParam.addEventListener("input", function () {
             const val = parseFloat(this.value);
-            currentData.tracks[currentTrack][param.key] = val;
+            setState(val, param);
 
             updateParamUI(val, param.key, param.display(val));
             param.set(val);
 
             markAsChanged();
         });
+    });
+}
+
+function initTrackParams() {
+    initParams(trackParams, (val, param) => {
+        currentData.tracks[currentTrack][param.key] = val;
     });
 }
 
 function initMasterParams() {
-    masterParams.forEach(param => {
-        let currentParam = document.getElementById(param.key);
-        currentParam.addEventListener("input", function() {
-            const val = parseFloat(this.value);
-            currentData.master[param.key] = val;
-
-            updateParamUI(val, param.key, param.display(val));
-            param.set(val);
-
-            markAsChanged();
-        });
+    initParams(masterParams, (val, param) => {
+        currentData.master[param.key] = val;
     });
 }
 
-function initGlobalMasterControls() {
+function initGlobalMasterParams() {
     Tone.Transport.swingSubdivision = "16n";
 
-    globalMasterControls.forEach((param) => {
-        const currentParam = document.getElementById(param.key);
-        currentParam.addEventListener("input", function () {
-            const val = parseFloat(this.value);
-            currentData[param.key] = val;
-
-            updateParamUI(val, param.key, param.display(val));
-            param.set(val);
-
-            markAsChanged();
-        });
+    initParams(globalMasterControls, (val, param) => {
+        currentData[param.key] = val;
     });
 }
 

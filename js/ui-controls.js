@@ -438,7 +438,7 @@ function togglePageHit(step) {
 }
 
 function initGlobalControls() {
-    initGlobalMasterControls();
+    initGlobalMasterParams();
     initPageSelectors();
     initSave();
     initReload();
