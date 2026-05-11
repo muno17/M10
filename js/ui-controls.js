@@ -187,7 +187,7 @@ function initTrackSelectors() {
 
 // clear sequence for current track
 function initClear() {
-    var clear = document.getElementById("clear");
+    let clear = document.getElementById("clear");
 
     clear.addEventListener("click", function () {
         currentData.tracks[currentTrack].steps = [

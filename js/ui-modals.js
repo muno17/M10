@@ -1,6 +1,6 @@
 // Modal UI behavior
 
-var modalResolver = null;
+let modalResolver = null;
 
 function openNamingModal() {
     const overlay = document.getElementById("sequence-overlay");

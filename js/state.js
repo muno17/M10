@@ -1,20 +1,20 @@
 ////////////////////////// Data States \\\\\\\\\\\\\\\\\\\\\\\\\\
 // global params
-var currentTrack = 0;
-var currentStep = 0;
-var currentPage = 0;
-var length = "1m";
-var running = false;
-var changes = false;
-var loggedIn = false;
-var openModal = null;
+let currentTrack = 0;
+let currentStep = 0;
+let currentPage = 0;
+let length = "1m";
+let running = false;
+let changes = false;
+let loggedIn = false;
+let openModal = null;
 
 // massive JSON objects to contain all information
 // currentData is the live object
 // projectData is the master object that interacts with the api, contains the last saved state
 // initData is an init object with default parameters
 // initiate all to copies of initData, api calls update projectData and currentData on page load
-var initData = {
+let initData = {
     id: null,
     name: "",
     tempo: 120,
@@ -414,11 +414,11 @@ var initData = {
     },
 };
 
-var projectData = JSON.parse(JSON.stringify(initData));
-var currentData = JSON.parse(JSON.stringify(initData));
+let projectData = JSON.parse(JSON.stringify(initData));
+let currentData = JSON.parse(JSON.stringify(initData));
 
 // init samples for when user is not logged in
-var initSamples = {
+let initSamples = {
     samples: [
         {
             path: "/samples/init/Marshalls_Kick.wav",

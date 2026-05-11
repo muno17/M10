@@ -102,7 +102,7 @@ function initSequenceSelector() {
     const selector = document.getElementById("sequences");
 
     selector.addEventListener("change", function () {
-        var selectedId = this.value;
+        let selectedId = this.value;
         // save currentData if changes
         if (changes) {
             openSaveModal(selectedId);

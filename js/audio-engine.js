@@ -20,25 +20,25 @@ const reverbSends = [];
 // recording functionality
 const recorder = new Tone.Recorder();
 Tone.Destination.connect(recorder);
-var recording = false;
+let recording = false;
 
 // master output to apply master effects
 const master = Tone.getDestination();
 
 // global variables for master effects
-var masterVolNode;
-var masterCompressor;
-var masterEQ;
-var masterSaturator;
-var masterLimiter;
-var masterReverb;
-var reverbWidener;
-var reverbHeat;
-var reverbLimiter;
+let masterVolNode;
+let masterCompressor;
+let masterEQ;
+let masterSaturator;
+let masterLimiter;
+let masterReverb;
+let reverbWidener;
+let reverbHeat;
+let reverbLimiter;
 
 // create tone.js samplers
 function initInstruments() {
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
         const track = currentData.tracks[i];
 
         // initialize the sample player
