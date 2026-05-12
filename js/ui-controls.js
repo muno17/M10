@@ -119,41 +119,6 @@ function updatePageVisuals(measures) {
     });
 }
 
-function initSampleSelector() {
-    const selector = document.getElementById("samples");
-
-    // load sample
-    selector.addEventListener("change", function () {
-        if (this.value === "upload") {
-            return;
-        }
-
-        // update data
-        const path = this.value;
-        const name = this.options[this.selectedIndex].dataset.name;
-
-        currentData.tracks[currentTrack].samplePath = path;
-        currentData.tracks[currentTrack].sampleName = name;
-
-        // update audio engine
-        instruments[currentTrack].load(path);
-
-        markAsChanged();
-    });
-}
-
-
-function initGuestUpload() {
-    const upload = document.getElementById("localFile");
-
-    if (upload) {
-        upload.addEventListener("change", function (e) {
-            const file = e.target.files[0];
-            handleLocalUpload(file, currentTrack);
-        });
-    }
-}
-
 function initTrackSelectors() {
     const trackBtns = document.querySelectorAll(".trackBtn");
 
@@ -190,11 +155,7 @@ function initClear() {
     let clear = document.getElementById("clear");
 
     clear.addEventListener("click", function () {
-        currentData.tracks[currentTrack].steps = [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ];
+        currentData.tracks[currentTrack].steps = createEmptySteps();
         renderSequencer();
         markAsChanged();
     });

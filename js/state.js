@@ -1,4 +1,9 @@
 ////////////////////////// Data States \\\\\\\\\\\\\\\\\\\\\\\\\\
+// helper: build a fresh array of zeroed steps (default 64 = 4 pages of 16)
+function createEmptySteps(length = 64) {
+    return Array(length).fill(0);
+}
+
 // global params
 let currentTrack = 0;
 let currentStep = 0;
@@ -51,12 +56,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 1,
@@ -87,12 +87,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 2,
@@ -123,12 +118,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 3,
@@ -159,12 +149,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 4,
@@ -195,12 +180,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 5,
@@ -231,12 +211,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 6,
@@ -267,12 +242,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 7,
@@ -303,12 +273,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 8,
@@ -339,12 +304,7 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 9,
@@ -375,21 +335,11 @@ let initData = {
             delTime: 0,
             delFback: 0,
             delMix: 0,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
         {
             id: 99,
-            steps: [
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0,
-            ],
+            steps: createEmptySteps(),
         },
     ],
     master: {
@@ -416,49 +366,3 @@ let initData = {
 
 let projectData = JSON.parse(JSON.stringify(initData));
 let currentData = JSON.parse(JSON.stringify(initData));
-
-// init samples for when user is not logged in
-let initSamples = {
-    samples: [
-        {
-            path: "/samples/init/Marshalls_Kick.wav",
-            name: "Marshalls Kick",
-        },
-        {
-            path: "/samples/init/Marshalls_Clap.wav",
-            name: "Marshalls Clap",
-        },
-        {
-            path: "/samples/init/Marshalls_Open.wav",
-            name: "Marshalls Open Hat",
-        },
-        {
-            path: "/samples/init/Marshalls_Closed.wav",
-            name: "Marshalls Closed Hat",
-        },
-        {
-            path: "/samples/init/Digi Buzz Bass.wav",
-            name: "Digi Buzz Bass",
-        },
-        {
-            path: "/samples/init/canto.wav",
-            name: "Canto Stab",
-        },
-        {
-            path: "/samples/init/Grain_Drone.wav",
-            name: "Grain Drone",
-        },
-        {
-            path: "/samples/init/OB Cosmic Pad.wav",
-            name: "OB Cosmic Pad",
-        },
-        {
-            path: "/samples/init/Digi Galactic Bass.wav",
-            name: "Digi Galactic Bass",
-        },
-        {
-            path: "/samples/init/Pro 3 bass 1.wav",
-            name: "Pro3 Bass",
-        },
-    ],
-};

@@ -103,15 +103,6 @@ function initInstruments() {
     }
 }
 
-// load instruments with samples from currentData
-function loadInstruments() {
-    currentData.tracks.forEach((track, index) => {
-        if (track.samplePath) {
-            instruments[index].load(track.samplePath);
-        }
-    });
-}
-
 // chain together effects to create a master reverb bus
 async function initReverbBus() {
     // dirt
