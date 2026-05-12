@@ -22,21 +22,7 @@ const recorder = new Tone.Recorder();
 Tone.Destination.connect(recorder);
 let recording = false;
 
-// master output to apply master effects
-const master = Tone.getDestination();
-
-// global variables for master effects
-let masterVolNode;
-let masterCompressor;
-let masterEQ;
-let masterSaturator;
-let masterLimiter;
-let masterReverb;
-let reverbWidener;
-let reverbHeat;
-let reverbLimiter;
-
-// create tone.js samplers
+// create tone.js samplers for each track
 function initInstruments() {
     for (let i = 0; i < 10; i++) {
         const track = currentData.tracks[i];
@@ -84,7 +70,7 @@ function initInstruments() {
         // send to master reverb bus
         reverbSends[i] = new Tone.Gain(track.reverb);
         delays[i].connect(reverbSends[i]);
-        reverbSends[i].connect(reverbHeat);
+        reverbSends[i].connect(master.reverbHeat);
 
         // chain the audio path
         instruments[i].chain(
@@ -97,62 +83,18 @@ function initInstruments() {
             tremolos[i],
             delays[i],
             panVols[i],
-            masterEQ, // final destination
+            master.eq, // final destination
         );
     
     }
-}
-
-// chain together effects to create a master reverb bus
-async function initReverbBus() {
-    // dirt
-    reverbHeat = new Tone.Chebyshev(10);
-    reverbHeat.wet.value = 0.05;
-
-    masterReverb = new Tone.Reverb({
-        decay: 3,
-        preDelay: 0.01,
-        wet: 1.0
-    });
-
-    // width
-    reverbWidener = new Tone.StereoWidener(0.3);
-    reverbLimiter = new Tone.Limiter(-3);
-
-    // chain effects from reverb bus together and send to masterEQ
-    reverbHeat.chain(masterReverb, reverbWidener, reverbLimiter, masterEQ);
-
-    await masterReverb.generate();
-}
-
-function initMasterChain() {
-    masterVolNode = new Tone.Gain(1);
-
-    // init master effects
-    masterEQ = new Tone.EQ3(0, 0, 0);
-    masterCompressor = new Tone.Compressor(-24, 3);
-    masterSaturator = new Tone.Distortion(0);
-    saturatorFilter = new Tone.Filter(20000, "lowpass");
-    masterLimiter = new Tone.Limiter(-1);
-
-
-    // chain master audio and send to main output
-    masterEQ.chain(
-        masterCompressor,
-        masterSaturator,
-        saturatorFilter,
-        masterVolNode,
-        masterLimiter,
-        Tone.Destination,
-    );
 }
 
 // initialize all controls, audio engine and api
 window.onload = async function () {
     try {
         // audio setup
-        initMasterChain();
-        await initReverbBus();
+        master.initChain();
+        await master.initReverbBus();
         initInstruments();
 
         // set up transport
@@ -309,8 +251,8 @@ async function startTransport() {
     Tone.context.resume();
 
     // initiate reverb if it hasn't started
-    if (masterReverb && !masterReverb.ready) {
-        await masterReverb.generate();
+    if (master.reverb && !master.reverb.ready) {
+        await master.reverb.generate();
     }
 
     Tone.Transport.loop = true;

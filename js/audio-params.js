@@ -2,10 +2,6 @@
 // functions to update audio for each parameter
 
 ////// global params
-function setMasterVol(val) {
-    masterVolNode.gain.rampTo(Tone.dbToGain(val), 0.1);
-}
-
 function setTempo(val) {
     Tone.Transport.bpm.value = val;
 }
@@ -123,81 +119,4 @@ function setTrackDelayMix(val) {
 
 function setTrackReverbSend(val) {
     reverbSends[currentTrack].gain.rampTo(val, 0.1);
-}
-
-////////////////////////// Master Track Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
-
-// reverb
-function setMasterCompression(val) {
-    masterCompressor.threshold.value = val;
-}
-
-function setMasterDirt(val) {
-    reverbHeat.order = Math.floor(val);
-}
-
-function setMasterDirtMix(val) {
-    reverbHeat.wet.value = val;
-}
-
-async function setMasterSpace(val) {
-    masterReverb.decay = val > 0 ? val : 0.001;
-    await masterReverb.generate();
-}
-
-function setMasterPredelay(val) {
-    masterReverb.preDelay = val;
-}
-
-function setMasterReverbWidth(val) {
-    // 0 = mono, 1 = very Wide
-    reverbWidener.width.rampTo(val, 0.1);
-}
-
-// eq
-
-function setMasterEqLow(val) {
-    masterEQ.low.value = val;
-}
-
-function setMasterEqMid(val) {
-    masterEQ.mid.value = val;
-}
-
-function setMasterEqHigh(val) {
-    masterEQ.high.value = val;
-}
-
-// compressor
-function setMasterCompThresh(val) {
-    masterCompressor.threshold.rampTo(Math.min(0, val), 0.1);
-}
-
-function setMasterCompRatio(val) {
-    masterCompressor.ratio.rampTo(val, 0.1);
-}
-
-function setMasterCompAttack(val) {
-    masterCompressor.attack.rampTo(val, 0.1);
-}
-
-function setMasterCompRelease(val) {
-    masterCompressor.release.rampTo(val, 0.1);
-}
-
-function setMasterCompKnee(val) {
-    masterCompressor.knee.rampTo(val, 0.1);
-}
-
-// saturator
-function setMasterSatDrive(val) {
-    masterSaturator.distortion = val;
-}
-
-function setMasterSatTone(val) {
-    saturatorFilter.frequency.rampTo(val, 0.1);
-}
-
-function setMasterSatMix(val) {
-    masterSaturator.wet.value = val;
 }

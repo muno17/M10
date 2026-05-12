@@ -30,28 +30,28 @@ const trackParams = [
 
 ///////////////////////// Master Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
 const masterParams = [
-    {key: "dirt", display: (v) => intDisplay(v, 1), set: setMasterDirt},
-    {key: "dirtMix", display: (v) => intDisplay(v, 100), set: setMasterDirtMix},
-    {key: "space", display: (v) => intDisplay(v, 10), set: setMasterSpace},
-    {key: "predelay", display: (v) => intDisplay(v, 100), set: setMasterPredelay},
-    {key: "revWidth", display: (v) => intDisplay(v, 100), set: setMasterReverbWidth},
-    {key: "eqLow", display: dbDisplay, set: setMasterEqLow},
-    {key: "eqMid", display: dbDisplay, set: setMasterEqMid},
-    {key: "eqHigh", display: dbDisplay, set: setMasterEqHigh},
-    {key: "compThresh", display: dbDisplay, set: setMasterCompThresh},
-    {key: "compRatio", display: (v) => intDisplay(v, 1), set: setMasterCompRatio},
-    {key: "compAttack", display: (v) => intDisplay(v, 100), set: setMasterCompAttack},
-    {key: "compRelease", display: (v) => intDisplay(v, 100), set: setMasterCompRelease},
-    {key: "compKnee", display: (v) => intDisplay(v, 1), set: setMasterCompKnee},
-    {key: "satDrive", display: (v) => intDisplay(v, 200), set: setMasterSatDrive},
-    {key: "satTone", display: (v) => intDisplay(v, 0.005), set: setMasterSatTone},
-    {key: "satMix", display: (v) => intDisplay(v, 100), set: setMasterSatMix},
+    {key: "dirt", display: (v) => intDisplay(v, 1), set: (val) => master.setDirt(val)},
+    {key: "dirtMix", display: (v) => intDisplay(v, 100), set: (val) => master.setDirtMix(val)},
+    {key: "space", display: (v) => intDisplay(v, 10), set: (val) => master.setSpace(val)},
+    {key: "predelay", display: (v) => intDisplay(v, 100), set: (val) => master.setPredelay(val)},
+    {key: "revWidth", display: (v) => intDisplay(v, 100), set: (val) => master.setReverbWidth(val)},
+    {key: "eqLow", display: dbDisplay, set: (val) => master.setEqLow(val)},
+    {key: "eqMid", display: dbDisplay, set: (val) => master.setEqMid(val)},
+    {key: "eqHigh", display: dbDisplay, set: (val) => master.setEqHigh(val)},
+    {key: "compThresh", display: dbDisplay, set: (val) => master.setCompThresh(val)},
+    {key: "compRatio", display: (v) => intDisplay(v, 1), set: (val) => master.setCompRatio(val)},
+    {key: "compAttack", display: (v) => intDisplay(v, 100), set: (val) => master.setCompAttack(val)},
+    {key: "compRelease", display: (v) => intDisplay(v, 100), set: (val) => master.setCompRelease(val)},
+    {key: "compKnee", display: (v) => intDisplay(v, 1), set: (val) => master.setCompKnee(val)},
+    {key: "satDrive", display: (v) => intDisplay(v, 200), set: (val) => master.setSatDrive(val)},
+    {key: "satTone", display: (v) => intDisplay(v, 0.005), set: (val) => master.setSatTone(val)},
+    {key: "satMix", display: (v) => intDisplay(v, 100), set: (val) => master.setSatMix(val)},
 ];
 
 ///////////////////////// Global Master Controls \\\\\\\\\\\\\\\\\\\\\\\\\\
 const globalMasterControls = [
+    {key: "masterVolume", display: dbDisplay, set: (val) => master.setVolume(val)},
     {key: "tempo", display: (v) => intDisplay(v, 1), set: setTempo},
-    {key: "masterVolume", display: dbDisplay, set: setMasterVol},
     {key: "swing", display: (v) => intDisplay(v, 100), set: setSwing},
 ];
 
@@ -83,8 +83,6 @@ function initMasterParams() {
 }
 
 function initGlobalMasterParams() {
-    Tone.Transport.swingSubdivision = "16n";
-
     initParams(globalMasterControls, (val, param) => {
         currentData[param.key] = val;
     });

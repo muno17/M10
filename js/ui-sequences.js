@@ -133,5 +133,5 @@ function resetInterface() {
     const tempoVal = currentData.tempo;
     document.getElementById("tempo").value = tempoVal;
     document.getElementById("tempoDisplay").innerText = tempoVal;
-    document.getElementById("masterVol").value = currentData.masterVolume;
+    document.getElementById("masterVolume").value = currentData.masterVolume;
 }

@@ -265,7 +265,7 @@ function renderParams() {
 
 // update the master track's saved values
 function renderMasterParams() {
-    const master = currentData.master;
+    const masterData = currentData.master;
     const masterRows = document.querySelectorAll(".master");
 
     masterRows.forEach((row) => {
@@ -280,7 +280,7 @@ function renderMasterParams() {
 
     // master effects
     masterParams.forEach(param => {
-        const val = master[param.key];
+        const val = masterData[param.key];
         updateParamUI(val, param.key, param.display(val));
     });
 }
@@ -320,16 +320,15 @@ function syncTrackParams() {
 }
 
 function syncMasterParams() {
-    const master = currentData.master;
-
     // master controls
     globalMasterControls.forEach((control) => {
         control.set(currentData[control.key]);
     });
 
     // master effects
+    const masterData = currentData.master;
     masterParams.forEach((param) => {
-        param.set(master[param.key]);
+        param.set(masterData[param.key]);
     });
 }
 
