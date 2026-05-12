@@ -4,90 +4,10 @@ Tone.Transport.loopEnd = length;
 Tone.Transport.swingSubdivision = "16n";
 Tone.context.lookAhead = 0.1;
 
-// arrays for instruments, parameters and effects
-const instruments = [];
-const panVols = [];
-const ampEnvs = [];
-const lpFilters = [];
-const hpFilters = [];
-const distortions = [];
-const bitcrushers = [];
-const choruses = [];
-const tremolos = [];
-const delays = [];
-const reverbSends = [];
-
 // recording functionality
 const recorder = new Tone.Recorder();
 Tone.Destination.connect(recorder);
 let recording = false;
-
-// create tone.js samplers for each track
-function initInstruments() {
-    for (let i = 0; i < 10; i++) {
-        const track = currentData.tracks[i];
-
-        // initialize the sample player
-        instruments[i] = new Tone.Player({
-            url: null,
-            autostart: false,
-            fadeOut: "32n",
-        });
-
-        // initialize all of the components for the audio chain
-        ampEnvs[i] = new Tone.AmplitudeEnvelope({
-            attack: track.attack,
-            decay: track.decay,
-            sustain: track.sustain,
-            release: track.release,
-        });
-
-        lpFilters[i] = new Tone.Filter(track.lpWidth, "lowpass");
-        hpFilters[i] = new Tone.Filter(track.hpWidth, "highpass");
-
-        // initialize all of the effects for the audio chain
-        distortions[i] = new Tone.Distortion({
-            distortion: track.distortion,
-            wet: track.distortion,
-        });
-        bitcrushers[i] = new Tone.BitCrusher({
-            bits: 4,
-            wet: track.bitcrusher,
-        });
-
-        choruses[i] = new Tone.Chorus(4, 2.5, 0.5);
-        choruses[i].wet.value = track.chorusMix;
-
-        tremolos[i] = new Tone.Tremolo(5, 0.75);
-        tremolos[i].wet.value = track.tremMix;
-
-        delays[i] = new Tone.FeedbackDelay("8n", track.delFback);
-        delays[i].wet.value = track.delMix;
-
-        // final output node for the track
-        panVols[i] = new Tone.PanVol(track.pan, track.volume);
-
-        // send to master reverb bus
-        reverbSends[i] = new Tone.Gain(track.reverb);
-        delays[i].connect(reverbSends[i]);
-        reverbSends[i].connect(master.reverbHeat);
-
-        // chain the audio path
-        instruments[i].chain(
-            ampEnvs[i],
-            lpFilters[i],
-            hpFilters[i],
-            distortions[i],
-            bitcrushers[i],
-            choruses[i],
-            tremolos[i],
-            delays[i],
-            panVols[i],
-            master.eq, // final destination
-        );
-    
-    }
-}
 
 // initialize all controls, audio engine and api
 window.onload = async function () {
@@ -95,7 +15,7 @@ window.onload = async function () {
         // audio setup
         master.initChain();
         await master.initReverbBus();
-        initInstruments();
+        initTracks();
 
         // set up transport
         Tone.Transport.bpm.value = currentData.tempo;
@@ -180,9 +100,8 @@ function setupAudioLoop() {
 
 // trigger the audio for sample playback
 function playTrackSound(index, time) {
-    const player = instruments[index];
-    const env = ampEnvs[index];
-    const track = currentData.tracks[index];
+    const player = tracks[index].instrument;
+    const env = tracks[index].ampEnv;
     const now = time || Tone.now();
 
     try {
@@ -192,7 +111,7 @@ function playTrackSound(index, time) {
             env.cancel(now);
 
             // get the start point of the sample and the time to play
-            const offset = player.buffer.duration * (track.start || 0);
+            const offset = player.buffer.duration * (tracks[index].playStart || 0);
             const safeOffset = Math.min(offset, player.buffer.duration - 0.005);
 
             // don't try to play past the length of the sample if start has been offset
@@ -214,32 +133,32 @@ function playTrackSound(index, time) {
 function stopAllSounds() {
     const now = Tone.now();
 
-    instruments.forEach((player, i) => {
+    tracks.forEach((track, i) => {
         // 1. Stop the sample source immediately
-        if (player) {
-            player.stop(now);
+        if (track.instrument) {
+            track.instrument.stop(now);
         }
 
         // 2. Kill the envelope
-        if (ampEnvs[i]) {
+        if (track.ampEnv) {
             // This stops any scheduled attack/release ramps
-            ampEnvs[i].cancel(now); 
+            track.ampEnv.cancel(now); 
             // This forces the envelope to its "off" state
-            ampEnvs[i].output.gain.setValueAtTime(0, now);
-            ampEnvs[i].triggerRelease(now);
+            track.ampEnv.output.gain.setValueAtTime(0, now);
+            track.ampEnv.triggerRelease(now);
         }
 
         // 3. Clear Delay tails - using .value for the Signal
-        if (delays[i]) {
-            delays[i].delayTime.cancelScheduledValues(now);
+        if (track.delay) {
+            track.delay.delayTime.cancelScheduledValues(now);
 
             // Use the track data to remember where the wet should be
             const currentWet = currentData.tracks[i].delMix;
             
             // Momentarily "Mute" the delay output
-            delays[i].wet.setValueAtTime(0, now);
+            track.delay.wet.setValueAtTime(0, now);
             // Schedule it to come back in 100ms
-            delays[i].wet.setValueAtTime(currentWet, now + 0.1);
+            track.delay.wet.setValueAtTime(currentWet, now + 0.1);
         }
     });
 }
@@ -259,8 +178,7 @@ async function startTransport() {
     Tone.Transport.loopEnd = currentData.length;
 
     // start LFOs
-    choruses.forEach((c) => c.start());
-    tremolos.forEach((t) => t.start());
+    tracks.forEach((t) => t.startLFOs());
 
     // functionality to play
     currentStep = 0;

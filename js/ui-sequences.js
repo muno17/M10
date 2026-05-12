@@ -58,7 +58,7 @@ function initReload() {
             currentData = JSON.parse(JSON.stringify(projectData));
             resetChanges();
 
-            // stop the current audio and reload instruments
+            // stop the current audio and reload trackss
             stopAllSounds();
             loadInstruments();
 

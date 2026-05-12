@@ -139,11 +139,11 @@ function initTrackSelectors() {
         btn.addEventListener("dblclick", function () {
             if (currentData.tracks[index].muted) {
                 currentData.tracks[index].muted = false;
-                panVols[index].mute = false;
+                tracks[index].setMute(false);
                 this.classList.remove("muted");
             } else {
                 currentData.tracks[index].muted = true;
-                panVols[index].mute = true;
+                tracks[index].setMute(true);
                 this.classList.add("muted");
             }
         });

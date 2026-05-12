@@ -57,11 +57,11 @@ function loadSequenceSamples() {
     });
 }
 
-// load instruments with samples from currentData
+// load tracks with samples from currentData
 function loadInstruments() {
     currentData.tracks.forEach((track, index) => {
         if (track.samplePath) {
-            instruments[index].load(track.samplePath);
+            tracks[index].loadSample(track.samplePath);
         }
     });
 }
@@ -97,7 +97,7 @@ function initSampleSelector() {
         currentData.tracks[currentTrack].sampleName = name;
 
         // update audio engine
-        instruments[currentTrack].load(path);
+        tracks[currentTrack].loadSample(path);
 
         markAsChanged();
     });
@@ -110,7 +110,7 @@ async function handleLocalUpload(file, trackIndex) {
     // create a temporary url for the local file
     const localURL = URL.createObjectURL(file);
 
-    await instruments[trackIndex].load(localURL);
+    await tracks[trackIndex].loadSample(localURL);
     currentData.tracks[trackIndex].sampleName = file.name;
     currentData.tracks[trackIndex].samplePath = localURL;
 
