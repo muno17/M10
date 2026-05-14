@@ -1,8 +1,10 @@
+import { resetChanges } from './sequences.js';
+
 // Modal UI behavior
 
 let modalResolver = null;
 
-function openNamingModal() {
+export function openNamingModal() {
     const overlay = document.getElementById("sequence-overlay");
     const seqName = document.getElementById("seq-name");
 
@@ -16,7 +18,7 @@ function openNamingModal() {
     });
 }
 
-function initOpenModal() {
+export function initOpenModal() {
     const overlay = document.getElementById("sequence-overlay");
     const closeBtn = document.getElementById("sequence-close-btn");
     const sequenceInitBtn = document.getElementById("sequence-init-btn");
@@ -49,7 +51,7 @@ function initOpenModal() {
     });
 }
 
-function openSaveModal(id) {
+export function openSaveModal(id) {
     // initiate the new sequence modal
     const overlay = document.getElementById("save-overlay");
     const noBtn = document.getElementById("sequence-nosave-btn");

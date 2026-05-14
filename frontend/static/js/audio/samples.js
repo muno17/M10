@@ -1,53 +1,59 @@
+import { globalState, currentData } from '../state/state.js';
+import { tracks } from './track.js';
+import { renderParams } from '../ui/controls.js';
+import { enableSequencer } from '../ui/sequencer.js';
+import { markAsChanged } from '../ui/sequences.js';
+
 ////////////////////////// Sample Loading & Management \\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // default samples for guest (not-logged-in) users
-let initSamples = {
+const initSamples = {
     samples: [
         {
-            path: "/samples/init/Marshalls_Kick.wav",
+            path: "static/samples/init/Marshalls_Kick.wav",
             name: "Marshalls Kick",
         },
         {
-            path: "/samples/init/Marshalls_Clap.wav",
+            path: "static/samples/init/Marshalls_Clap.wav",
             name: "Marshalls Clap",
         },
         {
-            path: "/samples/init/Marshalls_Open.wav",
+            path: "static/samples/init/Marshalls_Open.wav",
             name: "Marshalls Open Hat",
         },
         {
-            path: "/samples/init/Marshalls_Closed.wav",
+            path: "static/samples/init/Marshalls_Closed.wav",
             name: "Marshalls Closed Hat",
         },
         {
-            path: "/samples/init/Digi Buzz Bass.wav",
+            path: "static/samples/init/Digi Buzz Bass.wav",
             name: "Digi Buzz Bass",
         },
         {
-            path: "/samples/init/canto.wav",
+            path: "static/samples/init/canto.wav",
             name: "Canto Stab",
         },
         {
-            path: "/samples/init/Grain_Drone.wav",
+            path: "static/samples/init/Grain_Drone.wav",
             name: "Grain Drone",
         },
         {
-            path: "/samples/init/OB Cosmic Pad.wav",
+            path: "static/samples/init/OB Cosmic Pad.wav",
             name: "OB Cosmic Pad",
         },
         {
-            path: "/samples/init/Digi Galactic Bass.wav",
+            path: "static/samples/init/Digi Galactic Bass.wav",
             name: "Digi Galactic Bass",
         },
         {
-            path: "/samples/init/Pro 3 bass 1.wav",
+            path: "static/samples/init/Pro 3 bass 1.wav",
             name: "Pro3 Bass",
         },
     ],
 };
 
 // load samples for the currently selected sequence, then re-enable the UI
-function loadSequenceSamples() {
+export function loadSequenceSamples() {
     loadInstruments();
 
     // reenable once everything is loaded
@@ -58,7 +64,7 @@ function loadSequenceSamples() {
 }
 
 // load tracks with samples from currentData
-function loadInstruments() {
+export function loadInstruments() {
     currentData.tracks.forEach((track, index) => {
         if (track.sample.path) {
             tracks[index].loadSample(track.sample.path);
@@ -67,7 +73,7 @@ function loadInstruments() {
 }
 
 // populate the sample dropdown with the default guest samples
-function loadInitSamples() {
+export function loadInitSamples() {
     const samples = document.getElementById("samples");
 
     initSamples.samples.forEach((sample, index) => {
@@ -81,7 +87,7 @@ function loadInitSamples() {
 }
 
 // wire up the sample <select> so picking a sample loads it into the current track
-function initSampleSelector() {
+export function initSampleSelector() {
     const selector = document.getElementById("samples");
 
     selector.addEventListener("change", function () {
@@ -104,7 +110,7 @@ function initSampleSelector() {
 }
 
 // ****************** local uploads ****************** \\
-async function handleLocalUpload(file, trackIndex) {
+export async function handleLocalUpload(file, trackIndex) {
     if (!file) return;
 
     // create a temporary url for the local file
@@ -127,7 +133,7 @@ async function handleLocalUpload(file, trackIndex) {
 }
 
 // wire up the guest local-file input
-function initGuestUpload() {
+export function initGuestUpload() {
     const upload = document.getElementById("localFile");
 
     if (upload) {

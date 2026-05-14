@@ -1,12 +1,15 @@
+import { globalState, currentData } from '../state/state.js';
+import { markAsChanged } from './sequences.js';
+
 // ****************** sequencer functionality ****************** \\
 
-function initSequencer() {
+export function initSequencer() {
     const sequence = document.getElementById("sequencer");
 
     // activate the step on click
     sequence.addEventListener("click", function (e) {
         if (globalState.currentTrack === "master") return;
-        
+
         // check if an actual step was clicked
         if (e.target.classList.contains("step")) {
             // grab the step index
@@ -29,7 +32,7 @@ function initSequencer() {
     });
 }
 
-function renderSequencer() {
+export function renderSequencer() {
     if (globalState.currentTrack === "master") {
         return;
     }
@@ -52,7 +55,7 @@ function renderSequencer() {
 }
 
 // update sequencer UI position to make it look animated
-function updateUIPlayHead(step) {
+export function updateUIPlayHead(step) {
     if (!globalState.running) return;
 
     // calculate which page the transport is currently on
@@ -74,7 +77,7 @@ function updateUIPlayHead(step) {
     }
 }
 
-function disableSequencer(message) {
+export function disableSequencer(message) {
     const playBtn = document.getElementById("transport");
 
     Tone.Transport.stop();
@@ -91,13 +94,13 @@ function disableSequencer(message) {
     playBtn.innerHTML = message;
 }
 
-function enableSequencer() {
+export function enableSequencer() {
     const playBtn = document.getElementById("transport");
     playBtn.disabled = false;
     playBtn.innerHTML = "Play";
 }
 
-function updateSequenceLength(numPages) {
+export function updateSequenceLength(numPages) {
     currentData.length = numPages + "m";
     Tone.Transport.loopEnd = currentData.length;
 }

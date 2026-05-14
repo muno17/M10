@@ -1,14 +1,16 @@
-// Sequence save, reload, and reset actions
+import { globalState, currentData, projectData, resetToInit, revertToSaved } from '../state/state.js';
+import { stopAllSounds, stopTransport } from '../audio/engine.js';
+import { loadInstruments } from '../audio/samples.js';
+import { renderAll, renderGlobalControls, resetParams } from './controls.js';
+import { renderSequencer, updateUIPlayHead } from './sequencer.js';
+import { openNamingModal, openSaveModal } from './modals.js';
 
-function resetDataToInit() {
-    projectData = structuredClone(initData);
-    currentData = structuredClone(initData);
-}
+// Sequence save, reload, and reset actions
 
 // save currentData
 // assign a copy of currentData to projectData on success
 // 'glow' if there are changes to be made, remove if saved or if reloaded
-function initSave() {
+export function initSave() {
     const saveBtn = document.getElementById("save");
     saveBtn.addEventListener("click", async function () {
         // check if its the default sequence
@@ -35,7 +37,7 @@ function initSave() {
 }
 
 // make the save button glow when changes have been made
-function markAsChanged() {
+export function markAsChanged() {
     globalState.changes = true;
     if (globalState.loggedIn) {
         const saveBtn = document.getElementById("save");
@@ -45,20 +47,20 @@ function markAsChanged() {
     }
 }
 
-function resetChanges() {
+export function resetChanges() {
     const saveBtn = document.getElementById("save");
     saveBtn.classList.remove("changes");
     globalState.changes = false;
 }
 
 // revert back to last saved state
-function initReload() {
+export function initReload() {
     const reloadBtn = document.getElementById("reload");
 
     reloadBtn.addEventListener("click", function () {
         // don't do anything if there aren't any changes
         if (globalState.changes) {
-            currentData = structuredClone(projectData);
+            revertToSaved();
             resetChanges();
 
             // stop the current audio and reload trackss
@@ -72,7 +74,7 @@ function initReload() {
 }
 
 // create an init sequence
-async function initNew() {
+export async function initNew() {
     const newBtn = document.getElementById("new");
 
     newBtn.addEventListener("click", async function () {
@@ -82,7 +84,7 @@ async function initNew() {
             // User confirmed, now reset the data
             stopTransport();
 
-            resetDataToInit();
+            resetToInit();
 
             projectData.name = name;
             currentData.name = name;
@@ -94,7 +96,7 @@ async function initNew() {
     });
 }
 
-function initSequenceSelector() {
+export function initSequenceSelector() {
     const selector = document.getElementById("sequences");
 
     selector.addEventListener("change", function () {
@@ -113,8 +115,8 @@ function initSequenceSelector() {
     });
 }
 
-function resetInterface() {
-    resetDataToInit();
+export function resetInterface() {
+    resetToInit();
     resetChanges();
 
     Tone.Transport.stop();

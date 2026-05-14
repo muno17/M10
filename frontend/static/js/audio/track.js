@@ -1,7 +1,10 @@
+import { currentData } from '../state/state.js';
+import { master } from './master.js';
+
 ////////////////////////// Tracks \\\\\\\\\\\\\\\\\\\\\\\\\\
 
-class Track {
-    constructor(trackData, master) {
+export class Track {
+    constructor(trackData, masterRef) {
         this.instrument = null;
         this.playStart = null;
         this.panVol = null;
@@ -15,10 +18,10 @@ class Track {
         this.delay = null;
         this.reverbSend = null;
 
-        this.initChain(trackData, master);
+        this.initChain(trackData, masterRef);
     }
 
-    initChain(trackData, master) {
+    initChain(trackData, masterRef) {
         this.instrument = new Tone.Player({
             url: null,
             autostart: false,
@@ -58,7 +61,7 @@ class Track {
         // it is NOT in the main chain below
         this.reverbSend = new Tone.Gain(trackData.reverb.send);
         this.delay.connect(this.reverbSend);
-        this.reverbSend.connect(master.reverbHeat);
+        this.reverbSend.connect(masterRef.reverbHeat);
 
         this.panVol = new Tone.PanVol(trackData.mix.pan, trackData.mix.volume);
 
@@ -72,7 +75,7 @@ class Track {
             this.tremolo,
             this.delay,
             this.panVol,
-            master.eq, // final destination
+            masterRef.eq, // final destination
         );
 
         this.setMute(trackData.mix.muted);
@@ -133,9 +136,9 @@ class Track {
     startLFOs() { this.chorus.start(); this.tremolo.start(); }
 }
 
-const tracks = [];
+export const tracks = [];
 
-function initTracks() {
+export function initTracks() {
     for (let i = 0; i < 10; i++) {
         tracks.push(new Track(currentData.tracks[i], master));
     }

@@ -1,6 +1,6 @@
 ////////////////////////// Master Audio Chain \\\\\\\\\\\\\\\\\\\\\\\\\\
 
-class Master {
+export class Master {
     constructor() {
         this.volNode = null;
         this.compressor = null;
@@ -87,4 +87,4 @@ class Master {
 }
 
 // master singleton
-const master = new Master();
+export const master = new Master();

@@ -1,7 +1,17 @@
+import { globalState, currentData, createEmptySteps } from '../state/state.js';
+import { tracks } from '../audio/track.js';
+import { master } from '../audio/master.js';
+import { startTransport, stopTransport, isRecording, startRecording, stopRecording, recorder } from '../audio/engine.js';
+import { renderSequencer, updateUIPlayHead } from './sequencer.js';
+import { trackParams, masterParams, globalMasterControls, initGlobalMasterParams, updateParamUI, updateGlobalMasterControlUI } from './parameters.js';
+import { initSave, initReload, initNew, initSequenceSelector, markAsChanged } from './sequences.js';
+import { initSampleSelector, initGuestUpload } from '../audio/samples.js';
+import { initOpenModal } from './modals.js';
+
 // UI event listeners and logic
 
 // modify UI based on whether user is logged in or not
-function userNotLoggedIn() {
+export function userNotLoggedIn() {
     const sequences = document.getElementById("sequences");
     sequences.innerHTML = "<option>Log in to save sequences</option>";
     sequences.style.display = "none";
@@ -28,7 +38,7 @@ function userNotLoggedIn() {
 }
 
 ////////////////////////// Global Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
-function initTransport() {
+export function initTransport() {
     const transport = document.getElementById("transport");
 
     transport.addEventListener("click", async function () {
@@ -42,15 +52,14 @@ function initTransport() {
 
 function initRecord() {
     const record = document.getElementById("record");
-
     const transport = document.getElementById("transport");
 
     record.addEventListener("click", async function () {
-        if (recording) {
+        if (isRecording()) {
             // stop recording
             stopTransport();
 
-            recording = false;
+            stopRecording();
             record.innerHTML = "Record";
             record.classList.remove("recording");
 
@@ -67,7 +76,7 @@ function initRecord() {
         } else {
             // start recording
             transport.disabled = true;
-            recording = true;
+            startRecording();
             record.innerHTML = "Stop";
             record.classList.add("recording");
 
@@ -162,17 +171,17 @@ function initClear() {
     });
 }
 
-function toggleTrackHit(index) {
+export function toggleTrackHit(index) {
     const trackBtns = document.querySelectorAll(".trackBtn");
     trackBtns[index].classList.add("flash");
 }
 
-function untoggleTrackHit(index) {
+export function untoggleTrackHit(index) {
     const trackBtns = document.querySelectorAll(".trackBtn");
     trackBtns[index].classList.remove("flash");
 }
 
-function togglePageHit(step) {
+export function togglePageHit(step) {
     // calculate which page the transport is actually playing
     const transportPage = Math.floor(step / 16);
     const id = "page" + (transportPage + 1);
@@ -188,7 +197,7 @@ function togglePageHit(step) {
     }
 }
 
-function initGlobalControls() {
+export function initGlobalControls() {
     initGlobalMasterParams();
     initPageSelectors();
     initSave();
@@ -207,8 +216,8 @@ function initGlobalControls() {
 ///////////////////////// Rendering \\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // show/hide the track specific and master track params
-function renderParams() {
-    const trackParams = document.getElementById("trackParams");
+export function renderParams() {
+    const trackParamsEl = document.getElementById("trackParams");
     const effectParams = document.getElementById("effectParams");
     const effectHouse = document.getElementById("effectsHouse");
     const divider = document.getElementById("paramDivider");
@@ -222,7 +231,7 @@ function renderParams() {
         selectorRow.classList.add("hidden");
         divider.classList.add("hidden");
 
-        const rows = trackParams.querySelectorAll(".paramRow");
+        const rows = trackParamsEl.querySelectorAll(".paramRow");
         rows.forEach((row) => {
             row.classList.add("hidden");
         });
@@ -233,14 +242,14 @@ function renderParams() {
         });
 
         // show the master UI
-        trackParams.classList.add("master");
+        trackParamsEl.classList.add("master");
         effectParams.classList.add("master");
         stateRow.classList.add("master");
 
         renderMasterParams();
         sequencer.classList.add("read-only");
     } else {
-        trackParams.classList.remove("master");
+        trackParamsEl.classList.remove("master");
         effectParams.classList.remove("master");
         stateRow.classList.remove("master");
         // hide the master specific UI
@@ -253,7 +262,7 @@ function renderParams() {
         selectorRow.classList.remove("hidden");
         divider.classList.remove("hidden");
 
-        const rows = trackParams.querySelectorAll(".paramRow");
+        const rows = trackParamsEl.querySelectorAll(".paramRow");
         rows.forEach((row) => row.classList.remove("hidden"));
 
         const effectsRows = effectHouse.querySelectorAll(".paramRow");
@@ -264,13 +273,13 @@ function renderParams() {
     }
 }
 
-function renderAll() {
+export function renderAll() {
     renderSequencer();
     renderParams();
 }
 
 // update global controls (tempo, volume, swing, page indicators)
-function renderGlobalControls() {
+export function renderGlobalControls() {
     globalMasterControls.forEach((param) => {
         updateGlobalMasterControlUI(param, currentData[param.key]);
     });
@@ -278,7 +287,7 @@ function renderGlobalControls() {
 }
 
 // update the master track's saved values
-function renderMasterParams() {
+export function renderMasterParams() {
     const masterData = currentData.master;
     const masterRows = document.querySelectorAll(".master");
 
@@ -296,7 +305,7 @@ function renderMasterParams() {
 }
 
 // update all params to track's saved value
-function renderTrackParams() {
+export function renderTrackParams() {
     const track = currentData.tracks[globalState.currentTrack];
     const samplesDropdown = document.getElementById("samples");
 
@@ -314,7 +323,7 @@ function renderTrackParams() {
     });
 }
 
-function syncTrackParams() {
+export function syncTrackParams() {
     const originalViewTrack = globalState.currentTrack;
 
     currentData.tracks.forEach((track, index) => {
@@ -328,7 +337,7 @@ function syncTrackParams() {
     globalState.currentTrack = originalViewTrack;
 }
 
-function syncMasterParams() {
+export function syncMasterParams() {
     // master controls
     globalMasterControls.forEach((control) => {
         control.set(currentData[control.key]);
@@ -342,7 +351,7 @@ function syncMasterParams() {
     });
 }
 
-function resetParams() {
+export function resetParams() {
     syncMasterParams();
     syncTrackParams();
 }

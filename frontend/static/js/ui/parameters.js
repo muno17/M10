@@ -1,7 +1,38 @@
+import { globalState, currentData } from '../state/state.js';
+import { tracks } from '../audio/track.js';
+import { master } from '../audio/master.js';
+import { markAsChanged } from './sequences.js';
+
 // track and master parameter UI
 // tracks[currentTrack].setParam(val)
+
+export function intDisplay(val, multiplier) {
+    return parseInt(val * multiplier);
+}
+
+export function dbDisplay(val) {
+    return parseInt(val) + "db";
+}
+
+export function pitchDisplay(val) {
+    const num = parseFloat(val);
+    const formattedVal = num.toFixed(1);
+    let sign = "";
+    if (num > 0) {
+        sign = "+";
+    }
+    return sign + formattedVal;
+}
+
+export function filterWidthDisplay(val) {
+    if (val >= 1000) {
+        return (val / 1000).toFixed(1) + "kHz";
+    }
+    return Math.round(val) + "Hz";
+}
+
 ///////////////////////// Track Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
-const trackParams = [
+export const trackParams = [
     {key: "volume",     path: ["mix", "volume"],          display: dbDisplay,                    set: (val) => tracks[globalState.currentTrack].setVolume(val)},
     {key: "pan",        path: ["mix", "pan"],             display: (v) => intDisplay(v, 50),     set: (val) => tracks[globalState.currentTrack].setPan(val)},
     {key: "pitch",      path: ["mix", "pitch"],           display: pitchDisplay,                 set: (val) => tracks[globalState.currentTrack].setPitch(val)},
@@ -29,7 +60,7 @@ const trackParams = [
 ];
 
 ///////////////////////// Master Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
-const masterParams = [
+export const masterParams = [
     {key: "dirt",        path: ["reverb", "dirt"],           display: (v) => intDisplay(v, 1),   set: (val) => master.setDirt(val)},
     {key: "dirtMix",     path: ["reverb", "dirtMix"],       display: (v) => intDisplay(v, 100), set: (val) => master.setDirtMix(val)},
     {key: "space",       path: ["reverb", "space"],         display: (v) => intDisplay(v, 10),  set: (val) => master.setSpace(val)},
@@ -49,7 +80,7 @@ const masterParams = [
 ];
 
 ///////////////////////// Global Master Controls \\\\\\\\\\\\\\\\\\\\\\\\\\
-const globalMasterControls = [
+export const globalMasterControls = [
     {key: "masterVolume", display: dbDisplay, set: (val) => master.setVolume(val)},
     {key: "tempo", display: (v) => intDisplay(v, 1), set: (val) => Tone.Transport.bpm.value = val},
     {key: "swing", display: (v) => intDisplay(v, 100), set: (val) => Tone.Transport.swing = val},
@@ -72,21 +103,21 @@ function initParams(params, setState) {
     });
 }
 
-function initTrackParams() {
+export function initTrackParams() {
     initParams(trackParams, (val, param) => {
         const [group, prop] = param.path;
         currentData.tracks[globalState.currentTrack][group][prop] = val;
     });
 }
 
-function initMasterParams() {
+export function initMasterParams() {
     initParams(masterParams, (val, param) => {
         const [group, prop] = param.path;
         currentData.master[group][prop] = val;
     });
 }
 
-function initGlobalMasterParams() {
+export function initGlobalMasterParams() {
     initParams(globalMasterControls, (val, param) => {
         currentData[param.key] = val;
     });
@@ -94,7 +125,7 @@ function initGlobalMasterParams() {
 
 ///////////////////////// UI Rendering Functions \\\\\\\\\\\\\\\\\\\\\\\\\\
 
-function updateGlobalMasterControlUI(param, val) {
+export function updateGlobalMasterControlUI(param, val) {
     const input = document.getElementById(param.key);
     const display = document.getElementById(param.key + "Display");
 
@@ -102,35 +133,10 @@ function updateGlobalMasterControlUI(param, val) {
     display.innerHTML = param.display(val);
 }
 
-function updateParamUI(val, key, display) {
+export function updateParamUI(val, key, display) {
     const param = document.getElementById(key);
     const paramDisplay = document.getElementById(key + "Display");
 
     param.value = val;
     paramDisplay.innerHTML = display;
-}
-
-function intDisplay(val, multiplier) {
-    return parseInt(val * multiplier);
-}
-
-function dbDisplay(val) {
-    return parseInt(val) + "db";
-}
-
-function pitchDisplay(val) {
-    const num = parseFloat(val);
-    const formattedVal = num.toFixed(1);
-    let sign = "";
-    if (num > 0) {
-        sign = "+";
-    }
-    return sign + formattedVal;
-}
-
-function filterWidthDisplay(val) {
-    if (val >= 1000) {
-        return (val / 1000).toFixed(1) + "kHz";
-    }
-    return Math.round(val) + "Hz";
 }

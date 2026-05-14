@@ -1,11 +1,11 @@
 ////////////////////////// Data States \\\\\\\\\\\\\\\\\\\\\\\\\\
 // helper: build a fresh array of zeroed steps (default 64 = 4 pages of 16)
-function createEmptySteps(length = 64) {
+export function createEmptySteps(length = 64) {
     return Array(length).fill(0);
 }
 
 // global params
-let globalState = {
+export let globalState = {
     currentTrack: 0,
     currentStep: 0,
     currentPage: 0,
@@ -22,7 +22,7 @@ let globalState = {
 // initData is an init object with default parameters
 // initiate all to copies of initData, api calls update projectData and currentData on page load
 
-function createDefaultTrack() {
+export function createDefaultTrack() {
     return {
         sample: { path: "", name: "New Sequence" },
         mix: { volume: -12, muted: false, pitch: 0, pan: 0, start: 0 },
@@ -39,7 +39,7 @@ function createDefaultTrack() {
     }
 }
 
-function createDefaultMaster() {
+export function createDefaultMaster() {
     return {
         reverb: { dirt: 5, dirtMix: 0.1, space: 2.0, predelay: 0.01, width: 0.3 },
         eq: { low: 0, mid: 0, high: 0 },
@@ -49,7 +49,7 @@ function createDefaultMaster() {
     }
 }
 
-let initData = {
+export let initData = {
     id: null,
     name: "",
     tempo: 120,
@@ -60,5 +60,14 @@ let initData = {
     master: createDefaultMaster(),
 };
 
-let projectData = structuredClone(initData);
-let currentData = structuredClone(initData);
+export let projectData = structuredClone(initData);
+export let currentData = structuredClone(initData);
+
+export function resetToInit() {
+    projectData = structuredClone(initData);
+    currentData = structuredClone(initData);
+}
+
+export function revertToSaved() {
+    currentData = structuredClone(projectData);
+}

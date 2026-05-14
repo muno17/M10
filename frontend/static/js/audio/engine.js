@@ -1,8 +1,26 @@
+import { globalState, currentData } from '../state/state.js';
+import { master } from './master.js';
+import { tracks } from './track.js';
+import { updateUIPlayHead } from '../ui/sequencer.js';
+import { toggleTrackHit, untoggleTrackHit, togglePageHit } from '../ui/controls.js';
+
 ////////////////////////// Audio Functionality \\\\\\\\\\\\\\\\\\\\\\\\\\
-let recorder;
+export let recorder;
 let recording = false;
 
-function initAudioContext() {
+export function isRecording() {
+    return recording;
+}
+
+export function startRecording() {
+    recording = true;
+}
+
+export function stopRecording() {
+    recording = false;
+}
+
+export function initAudioContext() {
     Tone.Transport.loop = true;
     Tone.Transport.loopEnd = globalState.loopLength;
     Tone.Transport.swingSubdivision = "16n";
@@ -12,60 +30,10 @@ function initAudioContext() {
     Tone.Destination.connect(recorder);
 }
 
-// initialize all controls, audio engine and api
-window.onload = async function () {
-    try {
-        // audio setup
-        initAudioContext();
-        master.initChain();
-        await master.initReverbBus();
-        initTracks();
-
-        // set up transport
-        Tone.Transport.bpm.value = currentData.tempo;
-        initTransport();
-
-        // control setup
-        initGlobalControls();
-        initSequencer();
-        initTrackParams();
-        initMasterParams();
-
-        // load init samples into sample dropdown for guests
-        loadInitSamples();
-
-        // once loaded, update ui and start audio functionality
-        Tone.loaded().then(() => {
-            globalState.currentTrack = 0;
-            renderParams();
-            setupAudioLoop();
-        });
-
-        renderMasterParams();
-        userNotLoggedIn();
-        removeLoadingScreen();
-    } catch (error) {
-        console.error("Failed to load:", error);
-        document.querySelector(".loading-box h3").innerText = "Load Failed :(";
-    }
-};
-
-// remove loading screen modal, add a bit of extra time for everything to shift into place
-function removeLoadingScreen() {
-    setTimeout(() => {
-        const loader = document.getElementById("loading-overlay");
-        loader.style.opacity = "0";
-        loader.style.transition = "opacity 0.5s ease";
-
-        setTimeout(() => {
-            loader.classList.add("hidden");
-        }, 500);
-    }, 500);
-}
 ////////////////////////// Loop Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // schedule the loop
-function setupAudioLoop() {
+export function setupAudioLoop() {
     // clear any existing loop
     Tone.Transport.cancel();
 
@@ -103,7 +71,7 @@ function setupAudioLoop() {
 }
 
 // trigger the audio for sample playback
-function playTrackSound(index, time) {
+export function playTrackSound(index, time) {
     const player = tracks[index].instrument;
     const env = tracks[index].ampEnv;
     const now = time || Tone.now();
@@ -134,7 +102,7 @@ function playTrackSound(index, time) {
 }
 
 // stop the audio buffer for each instrument immediately
-function stopAllSounds() {
+export function stopAllSounds() {
     const now = Tone.now();
 
     tracks.forEach((track, i) => {
@@ -167,9 +135,9 @@ function stopAllSounds() {
     });
 }
 
-async function startTransport() {
+export async function startTransport() {
     const transport = document.getElementById("transport");
-    
+
     await Tone.start();
     Tone.context.resume();
 
@@ -190,10 +158,9 @@ async function startTransport() {
     globalState.running = true;
     Tone.Transport.start("+0.1");
     transport.innerHTML = "Stop";
-
 }
 
-function stopTransport() {
+export function stopTransport() {
     const transport = document.getElementById("transport");
     globalState.running = false;
     // functionality to stop
