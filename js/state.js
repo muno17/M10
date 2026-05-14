@@ -41,23 +41,11 @@ function createDefaultTrack() {
 
 function createDefaultMaster() {
     return {
-        dirt: 5,
-        dirtMix: 0.1,
-        space: 2.0,
-        predelay: 0.01,
-        revWidth: 0.3,
-        eqLow: 0,
-        eqMid: 0,
-        eqHigh: 0,
-        compThresh: -24,
-        compRatio: 1,
-        compAttack: 0.05,
-        compRelease: 0.25,
-        compKnee: 30,
-        satDrive: 0,
-        satTone: 20000,
-        satMix: 0,
-        limitThresh: -3,
+        reverb: { dirt: 5, dirtMix: 0.1, space: 2.0, predelay: 0.01, width: 0.3 },
+        eq: { low: 0, mid: 0, high: 0 },
+        compressor: { threshold: -24, ratio: 1, attack: 0.05, release: 0.25, knee: 30 },
+        saturator: { drive: 0, tone: 20000, mix: 0 },
+        limiter: { threshold: -3 },
     }
 }
 

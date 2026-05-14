@@ -30,22 +30,22 @@ const trackParams = [
 
 ///////////////////////// Master Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
 const masterParams = [
-    {key: "dirt", display: (v) => intDisplay(v, 1), set: (val) => master.setDirt(val)},
-    {key: "dirtMix", display: (v) => intDisplay(v, 100), set: (val) => master.setDirtMix(val)},
-    {key: "space", display: (v) => intDisplay(v, 10), set: (val) => master.setSpace(val)},
-    {key: "predelay", display: (v) => intDisplay(v, 100), set: (val) => master.setPredelay(val)},
-    {key: "revWidth", display: (v) => intDisplay(v, 100), set: (val) => master.setReverbWidth(val)},
-    {key: "eqLow", display: dbDisplay, set: (val) => master.setEqLow(val)},
-    {key: "eqMid", display: dbDisplay, set: (val) => master.setEqMid(val)},
-    {key: "eqHigh", display: dbDisplay, set: (val) => master.setEqHigh(val)},
-    {key: "compThresh", display: dbDisplay, set: (val) => master.setCompThresh(val)},
-    {key: "compRatio", display: (v) => intDisplay(v, 1), set: (val) => master.setCompRatio(val)},
-    {key: "compAttack", display: (v) => intDisplay(v, 100), set: (val) => master.setCompAttack(val)},
-    {key: "compRelease", display: (v) => intDisplay(v, 100), set: (val) => master.setCompRelease(val)},
-    {key: "compKnee", display: (v) => intDisplay(v, 1), set: (val) => master.setCompKnee(val)},
-    {key: "satDrive", display: (v) => intDisplay(v, 200), set: (val) => master.setSatDrive(val)},
-    {key: "satTone", display: (v) => intDisplay(v, 0.005), set: (val) => master.setSatTone(val)},
-    {key: "satMix", display: (v) => intDisplay(v, 100), set: (val) => master.setSatMix(val)},
+    {key: "dirt",        path: ["reverb", "dirt"],           display: (v) => intDisplay(v, 1),   set: (val) => master.setDirt(val)},
+    {key: "dirtMix",     path: ["reverb", "dirtMix"],       display: (v) => intDisplay(v, 100), set: (val) => master.setDirtMix(val)},
+    {key: "space",       path: ["reverb", "space"],         display: (v) => intDisplay(v, 10),  set: (val) => master.setSpace(val)},
+    {key: "predelay",    path: ["reverb", "predelay"],      display: (v) => intDisplay(v, 100), set: (val) => master.setPredelay(val)},
+    {key: "revWidth",    path: ["reverb", "width"],         display: (v) => intDisplay(v, 100), set: (val) => master.setReverbWidth(val)},
+    {key: "eqLow",       path: ["eq", "low"],               display: dbDisplay,                 set: (val) => master.setEqLow(val)},
+    {key: "eqMid",       path: ["eq", "mid"],               display: dbDisplay,                 set: (val) => master.setEqMid(val)},
+    {key: "eqHigh",      path: ["eq", "high"],              display: dbDisplay,                 set: (val) => master.setEqHigh(val)},
+    {key: "compThresh",  path: ["compressor", "threshold"], display: dbDisplay,                 set: (val) => master.setCompThresh(val)},
+    {key: "compRatio",   path: ["compressor", "ratio"],     display: (v) => intDisplay(v, 1),   set: (val) => master.setCompRatio(val)},
+    {key: "compAttack",  path: ["compressor", "attack"],    display: (v) => intDisplay(v, 100), set: (val) => master.setCompAttack(val)},
+    {key: "compRelease", path: ["compressor", "release"],   display: (v) => intDisplay(v, 100), set: (val) => master.setCompRelease(val)},
+    {key: "compKnee",    path: ["compressor", "knee"],      display: (v) => intDisplay(v, 1),   set: (val) => master.setCompKnee(val)},
+    {key: "satDrive",    path: ["saturator", "drive"],      display: (v) => intDisplay(v, 200), set: (val) => master.setSatDrive(val)},
+    {key: "satTone",     path: ["saturator", "tone"],       display: (v) => intDisplay(v, 0.005), set: (val) => master.setSatTone(val)},
+    {key: "satMix",      path: ["saturator", "mix"],        display: (v) => intDisplay(v, 100), set: (val) => master.setSatMix(val)},
 ];
 
 ///////////////////////// Global Master Controls \\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -81,7 +81,8 @@ function initTrackParams() {
 
 function initMasterParams() {
     initParams(masterParams, (val, param) => {
-        currentData.master[param.key] = val;
+        const [group, prop] = param.path;
+        currentData.master[group][prop] = val;
     });
 }
 

@@ -282,7 +282,8 @@ function renderMasterParams() {
 
     // master effects
     masterParams.forEach(param => {
-        const val = masterData[param.key];
+        const [group, prop] = param.path;
+        const val = masterData[group][prop];
         updateParamUI(val, param.key, param.display(val));
     });
 }
@@ -329,7 +330,8 @@ function syncMasterParams() {
     // master effects
     const masterData = currentData.master;
     masterParams.forEach((param) => {
-        param.set(masterData[param.key]);
+        const [group, prop] = param.path;
+        param.set(masterData[group][prop]);
     });
 }
 
