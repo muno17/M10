@@ -134,6 +134,7 @@ class Track {
 }
 
 const tracks = [];
+
 function initTracks() {
     for (let i = 0; i < 10; i++) {
         tracks.push(new Track(currentData.tracks[i], master));

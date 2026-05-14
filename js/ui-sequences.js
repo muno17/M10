@@ -22,7 +22,7 @@ function initSave() {
             }
 
             // don't do anything if there isn't anything to save;
-            if (changes) {
+            if (globalState.changes) {
                 // await saveSequence(); // *** figure this out
 
                 resetChanges();
@@ -33,8 +33,8 @@ function initSave() {
 
 // make the save button glow when changes have been made
 function markAsChanged() {
-    changes = true;
-    if (loggedIn) {
+    globalState.changes = true;
+    if (globalState.loggedIn) {
         const saveBtn = document.getElementById("save");
         if (saveBtn) {
             saveBtn.classList.add("changes");
@@ -45,7 +45,7 @@ function markAsChanged() {
 function resetChanges() {
     const saveBtn = document.getElementById("save");
     saveBtn.classList.remove("changes");
-    changes = false;
+    globalState.changes = false;
 }
 
 // revert back to last saved state
@@ -54,7 +54,7 @@ function initReload() {
 
     reloadBtn.addEventListener("click", function () {
         // don't do anything if there aren't any changes
-        if (changes) {
+        if (globalState.changes) {
             currentData = JSON.parse(JSON.stringify(projectData));
             resetChanges();
 
@@ -104,12 +104,12 @@ function initSequenceSelector() {
     selector.addEventListener("change", function () {
         let selectedId = this.value;
         // save currentData if changes
-        if (changes) {
+        if (globalState.changes) {
             openSaveModal(selectedId);
         } else {
             if (selectedId != "new") {
                 // getSequence(selectedId); // *** figure this out
-                length = currentData.length;
+                globalState.length = currentData.length;
             } else {
                 resetInterface();
             }
@@ -124,7 +124,7 @@ function resetInterface() {
     resetChanges();
 
     Tone.Transport.stop();
-    currentStep = 0;
+    globalState.currentStep = 0;
 
     renderParams();
     renderSequencer();

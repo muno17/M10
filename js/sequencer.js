@@ -5,22 +5,22 @@ function initSequencer() {
 
     // activate the step on click
     sequence.addEventListener("click", function (e) {
-        if (currentTrack === 99) return;
+        if (globalState.currentTrack === 99) return;
         
         // check if an actual step was clicked
         if (e.target.classList.contains("step")) {
             // grab the step index
             const step = parseInt(e.target.dataset.step);
 
-            const offset = currentPage * 16;
+            const offset = globalState.currentPage * 16;
             const actualStep = offset + step;
 
             // toggle the data in the master object
-            const currentVal = currentData.tracks[currentTrack].steps[actualStep];
+            const currentVal = currentData.tracks[globalState.currentTrack].steps[actualStep];
             if (currentVal === 0) {
-                currentData.tracks[currentTrack].steps[actualStep] = 1;
+                currentData.tracks[globalState.currentTrack].steps[actualStep] = 1;
             } else {
-                currentData.tracks[currentTrack].steps[actualStep] = 0;
+                currentData.tracks[globalState.currentTrack].steps[actualStep] = 0;
             }
 
             e.target.classList.toggle("active");
@@ -30,16 +30,16 @@ function initSequencer() {
 }
 
 function renderSequencer() {
-    if (currentTrack == 99) {
+    if (globalState.currentTrack == 99) {
         return;
     }
 
     // look at currentdata and add values to sequence for current track
     const steps = document.querySelectorAll(".step");
-    const currentSeq = currentData.tracks[currentTrack].steps;
+    const currentSeq = currentData.tracks[globalState.currentTrack].steps;
 
     // calculate the current page steps
-    const offset = currentPage * 16;
+    const offset = globalState.currentPage * 16;
 
     steps.forEach((stepBtn, index) => {
         // only look at steps for the current page
@@ -53,7 +53,7 @@ function renderSequencer() {
 
 // update sequencer UI position to make it look animated
 function updateUIPlayHead(step) {
-    if (!running) return;
+    if (!globalState.running) return;
 
     // calculate which page the transport is currently on
     const transportPage = Math.floor(step / 16);
@@ -66,7 +66,7 @@ function updateUIPlayHead(step) {
     }
 
     // add styling to current step
-    if (transportPage == currentPage) {
+    if (transportPage == globalState.currentPage) {
         const current = document.querySelector(`.step[data-step="${activeStep}"]`);
         if (current) {
             current.classList.add("current");
@@ -80,8 +80,8 @@ function disableSequencer(message) {
     Tone.Transport.stop();
     Tone.Transport.cancel();
     Tone.Transport.position = 0;
-    running = false;
-    currentStep = 0;
+    globalState.running = false;
+    globalState.currentStep = 0;
 
     document.querySelectorAll(".step").forEach((el) => {
         el.classList.remove("current");

@@ -93,11 +93,11 @@ function initSampleSelector() {
         const path = this.value;
         const name = this.options[this.selectedIndex].dataset.name;
 
-        currentData.tracks[currentTrack].samplePath = path;
-        currentData.tracks[currentTrack].sampleName = name;
+        currentData.tracks[globalState.currentTrack].samplePath = path;
+        currentData.tracks[globalState.currentTrack].sampleName = name;
 
         // update audio engine
-        tracks[currentTrack].loadSample(path);
+        tracks[globalState.currentTrack].loadSample(path);
 
         markAsChanged();
     });
@@ -133,7 +133,7 @@ function initGuestUpload() {
     if (upload) {
         upload.addEventListener("change", function (e) {
             const file = e.target.files[0];
-            handleLocalUpload(file, currentTrack);
+            handleLocalUpload(file, globalState.currentTrack);
         });
     }
 }

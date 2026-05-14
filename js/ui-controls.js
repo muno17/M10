@@ -32,7 +32,7 @@ function initTransport() {
     const transport = document.getElementById("transport");
 
     transport.addEventListener("click", async function () {
-        if (running) {
+        if (globalState.running) {
             stopTransport();
         } else {
             startTransport();
@@ -88,7 +88,7 @@ function initPageSelectors() {
             pageBtns.forEach((b) => b.classList.remove("selected"));
             this.classList.add("selected");
 
-            currentPage = parseInt(this.dataset.index);
+            globalState.currentPage = parseInt(this.dataset.index);
             renderSequencer();
         });
 
@@ -129,7 +129,7 @@ function initTrackSelectors() {
             trackBtns.forEach((b) => b.classList.remove("selected"));
             this.classList.add("selected");
 
-            currentTrack = index;
+            globalState.currentTrack = index;
 
             renderSequencer();
             renderParams();
@@ -155,7 +155,7 @@ function initClear() {
     let clear = document.getElementById("clear");
 
     clear.addEventListener("click", function () {
-        currentData.tracks[currentTrack].steps = createEmptySteps();
+        currentData.tracks[globalState.currentTrack].steps = createEmptySteps();
         renderSequencer();
         markAsChanged();
     });
@@ -216,7 +216,7 @@ function renderParams() {
     const sequencer = document.getElementById("sequencer");
 
     // check if current track is master
-    if (currentTrack === 99) {
+    if (globalState.currentTrack === 99) {
         // hide the track specific UI
         selectorRow.classList.add("hidden");
         divider.classList.add("hidden");
@@ -287,7 +287,7 @@ function renderMasterParams() {
 
 // update all params to track's saved value
 function renderTrackParams() {
-    const track = currentData.tracks[currentTrack];
+    const track = currentData.tracks[globalState.currentTrack];
     const samplesDropdown = document.getElementById("samples");
 
     if (track.samplePath) {
@@ -305,18 +305,18 @@ function renderTrackParams() {
 }
 
 function syncTrackParams() {
-    const originalViewTrack = currentTrack;
+    const originalViewTrack = globalState.currentTrack;
 
     currentData.tracks.forEach((track, index) => {
         if (track.id === 99) return;
 
-        currentTrack = index;
+        globalState.currentTrack = index;
         trackParams.forEach((param) => {
             param.set(track[param.key]);
         });
     });
 
-    currentTrack = originalViewTrack;
+    globalState.currentTrack = originalViewTrack;
 }
 
 function syncMasterParams() {

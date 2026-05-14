@@ -2,30 +2,30 @@
 // tracks[currentTrack].setParam(val)
 ///////////////////////// Track Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
 const trackParams = [
-    {key: "volume", display: dbDisplay, set: (val) => tracks[currentTrack].setVolume(val)},
-    {key: "pan", display: (v) => intDisplay(v, 50), set: (val) => tracks[currentTrack].setPan(val)},
-    {key: "pitch", display: pitchDisplay, set: (val) => tracks[currentTrack].setPitch(val)},
-    {key: "start", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setStart(val)},
-    {key: "attack", display: (v) => intDisplay(v, 50), set: (val) => tracks[currentTrack].setAttack(val)},
-    {key: "decay", display: (v) => intDisplay(v, 50), set: (val) => tracks[currentTrack].setDecay(val)},
-    {key: "sustain", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setSustain(val)},
-    {key: "release", display: (v) => intDisplay(v, 20), set: (val) => tracks[currentTrack].setRelease(val)},
-    {key: "lpWidth", display: filterWidthDisplay, set: (val) => tracks[currentTrack].setLpWidth(val)},
-    {key: "lpq", display: (v) => intDisplay(v, 5), set: (val) => tracks[currentTrack].setLpQ(val)},
-    {key: "hpWidth", display: filterWidthDisplay, set: (val) => tracks[currentTrack].setHpWidth(val)},
-    {key: "hpq", display: (v) => intDisplay(v, 5), set: (val) => tracks[currentTrack].setHpQ(val)},
-    {key: "distortion", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setDistortion(val)},
-    {key: "bitcrusher", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setBitcrusher(val)},
-    {key: "chorusRate", display: (v) => intDisplay(v, 20), set: (val) => tracks[currentTrack].setChorusRate(val)},
-    {key: "chorusDepth", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setChorusDepth(val)},
-    {key: "chorusMix", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setChorusMix(val)},
-    {key: "tremRate", display: (v) => intDisplay(v, 5), set: (val) => tracks[currentTrack].setTremoloRate(val)},
-    {key: "tremDepth", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setTremoloDepth(val)},
-    {key: "tremMix", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setTremoloMix(val)},
-    {key: "delTime", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setDelayTime(val)},
-    {key: "delFback", display: (v) => intDisplay(v, 111.11), set: (val) => tracks[currentTrack].setDelayFeedback(val)},
-    {key: "delMix", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setDelayMix(val)},
-    {key: "reverb", display: (v) => intDisplay(v, 100), set: (val) => tracks[currentTrack].setReverbSend(val)},
+    {key: "volume", display: dbDisplay, set: (val) => tracks[globalState.currentTrack].setVolume(val)},
+    {key: "pan", display: (v) => intDisplay(v, 50), set: (val) => tracks[globalState.currentTrack].setPan(val)},
+    {key: "pitch", display: pitchDisplay, set: (val) => tracks[globalState.currentTrack].setPitch(val)},
+    {key: "start", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setStart(val)},
+    {key: "attack", display: (v) => intDisplay(v, 50), set: (val) => tracks[globalState.currentTrack].setAttack(val)},
+    {key: "decay", display: (v) => intDisplay(v, 50), set: (val) => tracks[globalState.currentTrack].setDecay(val)},
+    {key: "sustain", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setSustain(val)},
+    {key: "release", display: (v) => intDisplay(v, 20), set: (val) => tracks[globalState.currentTrack].setRelease(val)},
+    {key: "lpWidth", display: filterWidthDisplay, set: (val) => tracks[globalState.currentTrack].setLpWidth(val)},
+    {key: "lpq", display: (v) => intDisplay(v, 5), set: (val) => tracks[globalState.currentTrack].setLpQ(val)},
+    {key: "hpWidth", display: filterWidthDisplay, set: (val) => tracks[globalState.currentTrack].setHpWidth(val)},
+    {key: "hpq", display: (v) => intDisplay(v, 5), set: (val) => tracks[globalState.currentTrack].setHpQ(val)},
+    {key: "distortion", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setDistortion(val)},
+    {key: "bitcrusher", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setBitcrusher(val)},
+    {key: "chorusRate", display: (v) => intDisplay(v, 20), set: (val) => tracks[globalState.currentTrack].setChorusRate(val)},
+    {key: "chorusDepth", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setChorusDepth(val)},
+    {key: "chorusMix", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setChorusMix(val)},
+    {key: "tremRate", display: (v) => intDisplay(v, 5), set: (val) => tracks[globalState.currentTrack].setTremoloRate(val)},
+    {key: "tremDepth", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setTremoloDepth(val)},
+    {key: "tremMix", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setTremoloMix(val)},
+    {key: "delTime", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setDelayTime(val)},
+    {key: "delFback", display: (v) => intDisplay(v, 111.11), set: (val) => tracks[globalState.currentTrack].setDelayFeedback(val)},
+    {key: "delMix", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setDelayMix(val)},
+    {key: "reverb", display: (v) => intDisplay(v, 100), set: (val) => tracks[globalState.currentTrack].setReverbSend(val)},
 ];
 
 ///////////////////////// Master Parameters \\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -74,7 +74,7 @@ function initParams(params, setState) {
 
 function initTrackParams() {
     initParams(trackParams, (val, param) => {
-        currentData.tracks[currentTrack][param.key] = val;
+        currentData.tracks[globalState.currentTrack][param.key] = val;
     });
 }
 

@@ -1,6 +1,6 @@
 ////////////////////////// Audio Functionality \\\\\\\\\\\\\\\\\\\\\\\\\\
 Tone.Transport.loop = true;
-Tone.Transport.loopEnd = length;
+Tone.Transport.loopEnd = globalState.length;
 Tone.Transport.swingSubdivision = "16n";
 Tone.context.lookAhead = 0.1;
 
@@ -32,7 +32,7 @@ window.onload = async function () {
 
         // once loaded, update ui and start audio functionality
         Tone.loaded().then(() => {
-            currentTrack = 0;
+            globalState.currentTrack = 0;
             renderParams();
             setupAudioLoop();
         });
@@ -69,20 +69,20 @@ function setupAudioLoop() {
         const totalSteps = parseInt(currentData.length) * 16;
         // play the sounds for the current step
         currentData.tracks.forEach((track, index) => {
-            if (track.steps[currentStep] == 1) {
+            if (track.steps[globalState.currentStep] == 1) {
                 playTrackSound(index, time);
             }
         });
 
         // schedule the UI to move ONLY when the audio actually hits
         // pass the currentStep into the Draw function
-        let stepToDraw = currentStep;
+        let stepToDraw = globalState.currentStep;
         Tone.Draw.schedule(() => {
             updateUIPlayHead(stepToDraw);
 
             currentData.tracks.forEach((track, index) => {
                 untoggleTrackHit(index);
-                if (track.steps[currentStep] == 1) {
+                if (track.steps[globalState.currentStep] == 1) {
                     toggleTrackHit(index);
                 }
             });
@@ -94,7 +94,7 @@ function setupAudioLoop() {
         }, time);
 
         // increment for the next time the loop runs
-        currentStep = (currentStep + 1) % totalSteps;
+        globalState.currentStep = (globalState.currentStep + 1) % totalSteps;
     }, "16n");
 }
 
@@ -181,9 +181,9 @@ async function startTransport() {
     tracks.forEach((t) => t.startLFOs());
 
     // functionality to play
-    currentStep = 0;
+    globalState.currentStep = 0;
     updateUIPlayHead(0);
-    running = true;
+    globalState.running = true;
     Tone.Transport.start("+0.1");
     transport.innerHTML = "Stop";
 
@@ -191,14 +191,14 @@ async function startTransport() {
 
 function stopTransport() {
     const transport = document.getElementById("transport");
-    running = false;
+    globalState.running = false;
     // functionality to stop
     Tone.Transport.cancel(0);
     Tone.Transport.stop();
     stopAllSounds();
     Tone.Draw.cancel();
 
-    currentStep = 0;
+    globalState.currentStep = 0;
 
     document.querySelectorAll(".step").forEach((el) => {
         el.classList.remove("current");
