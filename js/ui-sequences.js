@@ -1,34 +1,37 @@
 // Sequence save, reload, and reset actions
 
+function resetDataToInit() {
+    projectData = structuredClone(initData);
+    currentData = structuredClone(initData);
+}
+
 // save currentData
 // assign a copy of currentData to projectData on success
 // 'glow' if there are changes to be made, remove if saved or if reloaded
 function initSave() {
     const saveBtn = document.getElementById("save");
-    if (saveBtn) {
-        saveBtn.addEventListener("click", async function () {
-            // check if its the default sequence
-            const sequencesDropdown = document.getElementById("sequences");
-            if (sequencesDropdown.value === "new") {
-                const name = await openNamingModal();
+    saveBtn.addEventListener("click", async function () {
+        // check if its the default sequence
+        const sequencesDropdown = document.getElementById("sequences");
+        if (sequencesDropdown.value === "new") {
+            const name = await openNamingModal();
 
-                // if user clicks the cancel button in the modal
-                if (!name) {
-                    return;
-                }
-
-                currentData.name = name;
-                projectData.name = name;
+            // if user clicks the cancel button in the modal
+            if (!name) {
+                return;
             }
 
-            // don't do anything if there isn't anything to save;
-            if (globalState.changes) {
-                // await saveSequence(); // *** figure this out
+            currentData.name = name;
+            projectData.name = name;
+        }
 
-                resetChanges();
-            }
-        });
-    }
+        // don't do anything if there isn't anything to save;
+        if (globalState.changes) {
+            // await saveSequence(); // *** figure this out
+
+            resetChanges();
+        }
+    });
 }
 
 // make the save button glow when changes have been made
@@ -62,11 +65,7 @@ function initReload() {
             stopAllSounds();
             loadInstruments();
 
-            // redraw the UI
-            renderSequencer();
-            renderParams();
-
-            // update params
+            renderAll();
             resetParams();
         }
     });
@@ -83,16 +82,13 @@ async function initNew() {
             // User confirmed, now reset the data
             stopTransport();
 
-            // Deep copy fresh data
-            projectData = structuredClone(initData);
-            currentData = structuredClone(initData);
+            resetDataToInit();
 
             projectData.name = name;
             currentData.name = name;
             currentData.id = null;
 
-            renderSequencer();
-            renderParams();
+            renderAll();
             markAsChanged();
         }
     });
@@ -118,20 +114,13 @@ function initSequenceSelector() {
 }
 
 function resetInterface() {
-    currentData = structuredClone(initData);
-    projectData = structuredClone(initData);
-
+    resetDataToInit();
     resetChanges();
 
     Tone.Transport.stop();
     globalState.currentStep = 0;
 
-    renderParams();
-    renderSequencer();
+    renderAll();
+    renderGlobalControls();
     updateUIPlayHead(0);
-
-    const tempoVal = currentData.tempo;
-    document.getElementById("tempo").value = tempoVal;
-    document.getElementById("tempoDisplay").innerText = tempoVal;
-    document.getElementById("masterVolume").value = currentData.masterVolume;
 }

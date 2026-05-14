@@ -132,8 +132,7 @@ function initTrackSelectors() {
 
             globalState.currentTrack = index;
 
-            renderSequencer();
-            renderParams();
+            renderAll();
         });
 
         if (index !== "master") {
@@ -265,6 +264,19 @@ function renderParams() {
     }
 }
 
+function renderAll() {
+    renderSequencer();
+    renderParams();
+}
+
+// update global controls (tempo, volume, swing, page indicators)
+function renderGlobalControls() {
+    globalMasterControls.forEach((param) => {
+        updateGlobalMasterControlUI(param, currentData[param.key]);
+    });
+    updatePageVisuals(parseInt(currentData.length));
+}
+
 // update the master track's saved values
 function renderMasterParams() {
     const masterData = currentData.master;
@@ -274,13 +286,8 @@ function renderMasterParams() {
         row.classList.remove("hidden");
     });
 
-    // master UI
-    globalMasterControls.forEach((param) => {
-        updateGlobalMasterControlUI(param, currentData[param.key]);
-    });
-    updatePageVisuals(parseInt(currentData.length))
+    renderGlobalControls();
 
-    // master effects
     masterParams.forEach(param => {
         const [group, prop] = param.path;
         const val = masterData[group][prop];
