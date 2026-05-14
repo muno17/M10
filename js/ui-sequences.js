@@ -109,7 +109,7 @@ function initSequenceSelector() {
         } else {
             if (selectedId != "new") {
                 // getSequence(selectedId); // *** figure this out
-                globalState.length = currentData.length;
+                globalState.loopLength = currentData.length;
             } else {
                 resetInterface();
             }

@@ -9,7 +9,7 @@ let globalState = {
     currentTrack: 0,
     currentStep: 0,
     currentPage: 0,
-    length: "1m",
+    loopLength: "1m",
     running: false,
     changes: false,
     loggedIn: false,

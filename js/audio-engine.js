@@ -1,18 +1,22 @@
 ////////////////////////// Audio Functionality \\\\\\\\\\\\\\\\\\\\\\\\\\
-Tone.Transport.loop = true;
-Tone.Transport.loopEnd = globalState.length;
-Tone.Transport.swingSubdivision = "16n";
-Tone.context.lookAhead = 0.1;
-
-// recording functionality
-const recorder = new Tone.Recorder();
-Tone.Destination.connect(recorder);
+let recorder;
 let recording = false;
+
+function initAudioContext() {
+    Tone.Transport.loop = true;
+    Tone.Transport.loopEnd = globalState.loopLength;
+    Tone.Transport.swingSubdivision = "16n";
+    Tone.context.lookAhead = 0.1;
+
+    recorder = new Tone.Recorder();
+    Tone.Destination.connect(recorder);
+}
 
 // initialize all controls, audio engine and api
 window.onload = async function () {
     try {
         // audio setup
+        initAudioContext();
         master.initChain();
         await master.initReverbBus();
         initTracks();
