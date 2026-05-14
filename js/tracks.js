@@ -26,41 +26,41 @@ class Track {
         });
 
         this.ampEnv = new Tone.AmplitudeEnvelope({
-            attack: trackData.attack,
-            decay: trackData.decay,
-            sustain: trackData.sustain,
-            release: trackData.release,
+            attack: trackData.envelope.attack,
+            decay: trackData.envelope.decay,
+            sustain: trackData.envelope.sustain,
+            release: trackData.envelope.release,
         });
 
-        this.lpFilter = new Tone.Filter(trackData.lpWidth, "lowpass");
-        this.hpFilter = new Tone.Filter(trackData.hpWidth, "highpass");
+        this.lpFilter = new Tone.Filter(trackData.lowpass.frequency, "lowpass");
+        this.hpFilter = new Tone.Filter(trackData.highpass.frequency, "highpass");
 
         this.distortion = new Tone.Distortion({
-            distortion: trackData.distortion,
+            distortion: trackData.distortion.amount,
             wet: 1,
         });
 
         this.bitcrusher = new Tone.BitCrusher({
             bits: 4,
-            wet: trackData.bitcrusher,
+            wet: trackData.bitcrusher.mix,
         });
 
         this.chorus = new Tone.Chorus(4, 2.5, 0.5);
-        this.chorus.wet.value = trackData.chorusMix;
+        this.chorus.wet.value = trackData.chorus.mix;
 
         this.tremolo = new Tone.Tremolo(5, 0.75);
-        this.tremolo.wet.value = trackData.tremMix;
+        this.tremolo.wet.value = trackData.tremolo.mix;
 
-        this.delay = new Tone.FeedbackDelay("8n", trackData.delFback);
-        this.delay.wet.value = trackData.delMix;
+        this.delay = new Tone.FeedbackDelay("8n", trackData.delay.feedback);
+        this.delay.wet.value = trackData.delay.mix;
 
         // reverbSend is a side bus (delay -> reverbSend -> master.reverbHeat),
         // it is NOT in the main chain below
-        this.reverbSend = new Tone.Gain(trackData.reverb);
+        this.reverbSend = new Tone.Gain(trackData.reverb.send);
         this.delay.connect(this.reverbSend);
         this.reverbSend.connect(master.reverbHeat);
 
-        this.panVol = new Tone.PanVol(trackData.pan, trackData.volume);
+        this.panVol = new Tone.PanVol(trackData.mix.pan, trackData.mix.volume);
 
         this.instrument.chain(
             this.ampEnv,
@@ -75,7 +75,7 @@ class Track {
             master.eq, // final destination
         );
 
-        this.setMute(trackData.muted);
+        this.setMute(trackData.mix.muted);
     }
 
     setMute(bool) { this.muted = bool; this.panVol.mute = bool; }

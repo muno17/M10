@@ -55,7 +55,7 @@ function initReload() {
     reloadBtn.addEventListener("click", function () {
         // don't do anything if there aren't any changes
         if (globalState.changes) {
-            currentData = JSON.parse(JSON.stringify(projectData));
+            currentData = structuredClone(projectData);
             resetChanges();
 
             // stop the current audio and reload trackss
@@ -84,8 +84,8 @@ async function initNew() {
             stopTransport();
 
             // Deep copy fresh data
-            projectData = JSON.parse(JSON.stringify(initData));
-            currentData = JSON.parse(JSON.stringify(initData));
+            projectData = structuredClone(initData);
+            currentData = structuredClone(initData);
 
             projectData.name = name;
             currentData.name = name;
@@ -118,8 +118,8 @@ function initSequenceSelector() {
 }
 
 function resetInterface() {
-    currentData = JSON.parse(JSON.stringify(initData));
-    projectData = JSON.parse(JSON.stringify(initData));
+    currentData = structuredClone(initData);
+    projectData = structuredClone(initData);
 
     resetChanges();
 

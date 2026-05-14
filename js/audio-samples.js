@@ -60,8 +60,8 @@ function loadSequenceSamples() {
 // load tracks with samples from currentData
 function loadInstruments() {
     currentData.tracks.forEach((track, index) => {
-        if (track.samplePath) {
-            tracks[index].loadSample(track.samplePath);
+        if (track.sample.path) {
+            tracks[index].loadSample(track.sample.path);
         }
     });
 }
@@ -93,8 +93,8 @@ function initSampleSelector() {
         const path = this.value;
         const name = this.options[this.selectedIndex].dataset.name;
 
-        currentData.tracks[globalState.currentTrack].samplePath = path;
-        currentData.tracks[globalState.currentTrack].sampleName = name;
+        currentData.tracks[globalState.currentTrack].sample.path = path;
+        currentData.tracks[globalState.currentTrack].sample.name = name;
 
         // update audio engine
         tracks[globalState.currentTrack].loadSample(path);
@@ -111,8 +111,8 @@ async function handleLocalUpload(file, trackIndex) {
     const localURL = URL.createObjectURL(file);
 
     await tracks[trackIndex].loadSample(localURL);
-    currentData.tracks[trackIndex].sampleName = file.name;
-    currentData.tracks[trackIndex].samplePath = localURL;
+    currentData.tracks[trackIndex].sample.name = file.name;
+    currentData.tracks[trackIndex].sample.path = localURL;
 
     const samples = document.getElementById("samples")
     let newSample = document.createElement("option");

@@ -157,7 +157,7 @@ function stopAllSounds() {
             track.delay.delayTime.cancelScheduledValues(now);
 
             // Use the track data to remember where the wet should be
-            const currentWet = currentData.tracks[i].delMix;
+            const currentWet = currentData.tracks[i].delay.mix;
             
             // Momentarily "Mute" the delay output
             track.delay.wet.setValueAtTime(0, now);

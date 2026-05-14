@@ -22,36 +22,19 @@ let globalState = {
 // initData is an init object with default parameters
 // initiate all to copies of initData, api calls update projectData and currentData on page load
 
-function createDefaultTrack(id) {
+function createDefaultTrack() {
     return {
-        id: id,
-        samplePath: "",
-        sampleName: "New Sequence",
-        volume: -12,
-        muted: false,
-        pitch: 0,
-        pan: 0,
-        start: 0,
-        attack: 0,
-        decay: 0.01,
-        sustain: 1,
-        release: 0,
-        lpWidth: 5000,
-        lpq: 0,
-        hpWidth: 1,
-        hpq: 0,
-        distortion: 0,
-        bitcrusher: 0,
-        reverb: 0,
-        chorusRate: 0,
-        chorusDepth: 0,
-        chorusMix: 0,
-        tremRate: 0,
-        tremDepth: 0,
-        tremMix: 0,
-        delTime: 0,
-        delFback: 0,
-        delMix: 0,
+        sample: { path: "", name: "New Sequence" },
+        mix: { volume: -12, muted: false, pitch: 0, pan: 0, start: 0 },
+        envelope: { attack: 0, decay: 0.01, sustain: 1, release: 0 },
+        lowpass: { frequency: 5000, q: 0 },
+        highpass: { frequency: 1, q: 0 },
+        distortion: { amount: 0 },
+        bitcrusher: { mix: 0 },
+        chorus: { rate: 0, depth: 0, mix: 0 },
+        tremolo: { rate: 0, depth: 0, mix: 0 },
+        delay: { time: 0, feedback: 0, mix: 0 },
+        reverb: { send: 0 },
         steps: createEmptySteps(),
     }
 }
@@ -85,12 +68,9 @@ let initData = {
     swing: 0,
     masterVolume: -6,
     length: "1m",
-    tracks: [
-        ...Array.from({length: 10}, (_, i) => createDefaultTrack(i)),
-        { id: 99, steps: createEmptySteps(), },
-    ],
+    tracks: Array.from({length: 10}, () => createDefaultTrack()),
     master: createDefaultMaster(),
 };
 
-let projectData = JSON.parse(JSON.stringify(initData));
-let currentData = JSON.parse(JSON.stringify(initData));
+let projectData = structuredClone(initData);
+let currentData = structuredClone(initData);

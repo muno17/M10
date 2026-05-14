@@ -5,7 +5,7 @@ function initSequencer() {
 
     // activate the step on click
     sequence.addEventListener("click", function (e) {
-        if (globalState.currentTrack === 99) return;
+        if (globalState.currentTrack === "master") return;
         
         // check if an actual step was clicked
         if (e.target.classList.contains("step")) {
@@ -30,7 +30,7 @@ function initSequencer() {
 }
 
 function renderSequencer() {
-    if (globalState.currentTrack == 99) {
+    if (globalState.currentTrack === "master") {
         return;
     }
 

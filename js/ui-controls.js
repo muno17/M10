@@ -123,8 +123,9 @@ function initTrackSelectors() {
     const trackBtns = document.querySelectorAll(".trackBtn");
 
     trackBtns.forEach((btn) => {
-        const index = parseInt(btn.dataset.index);
-        // for single clicks, display the track's parameters
+        const raw = btn.dataset.index;
+        const index = raw === "master" ? "master" : parseInt(raw);
+
         btn.addEventListener("click", function () {
             trackBtns.forEach((b) => b.classList.remove("selected"));
             this.classList.add("selected");
@@ -135,18 +136,19 @@ function initTrackSelectors() {
             renderParams();
         });
 
-        // for double clicks, mute the track
-        btn.addEventListener("dblclick", function () {
-            if (currentData.tracks[index].muted) {
-                currentData.tracks[index].muted = false;
-                tracks[index].setMute(false);
-                this.classList.remove("muted");
-            } else {
-                currentData.tracks[index].muted = true;
-                tracks[index].setMute(true);
-                this.classList.add("muted");
-            }
-        });
+        if (index !== "master") {
+            btn.addEventListener("dblclick", function () {
+                if (currentData.tracks[index].mix.muted) {
+                    currentData.tracks[index].mix.muted = false;
+                    tracks[index].setMute(false);
+                    this.classList.remove("muted");
+                } else {
+                    currentData.tracks[index].mix.muted = true;
+                    tracks[index].setMute(true);
+                    this.classList.add("muted");
+                }
+            });
+        }
     });
 }
 
@@ -216,7 +218,7 @@ function renderParams() {
     const sequencer = document.getElementById("sequencer");
 
     // check if current track is master
-    if (globalState.currentTrack === 99) {
+    if (globalState.currentTrack === "master") {
         // hide the track specific UI
         selectorRow.classList.add("hidden");
         divider.classList.add("hidden");
@@ -290,16 +292,16 @@ function renderTrackParams() {
     const track = currentData.tracks[globalState.currentTrack];
     const samplesDropdown = document.getElementById("samples");
 
-    if (track.samplePath) {
-        samplesDropdown.value = track.samplePath;
+    if (track.sample.path) {
+        samplesDropdown.value = track.sample.path;
     } else {
-        // fallback if no sample is loaded
         samplesDropdown.selectedIndex = 0;
         samplesDropdown.value = "";
     }
 
     trackParams.forEach(param => {
-        const val = track[param.key];
+        const [group, prop] = param.path;
+        const val = track[group][prop];
         updateParamUI(val, param.key, param.display(val));
     });
 }
@@ -308,11 +310,10 @@ function syncTrackParams() {
     const originalViewTrack = globalState.currentTrack;
 
     currentData.tracks.forEach((track, index) => {
-        if (track.id === 99) return;
-
         globalState.currentTrack = index;
         trackParams.forEach((param) => {
-            param.set(track[param.key]);
+            const [group, prop] = param.path;
+            param.set(track[group][prop]);
         });
     });
 
